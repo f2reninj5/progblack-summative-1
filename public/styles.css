@@ -1,5 +1,70 @@
-* {
-    font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Didact Gothic:700|Didact Gothic:400');
+
+:root {
+    --text: #210d0f;
+    --background: #f4e1e4;
+    --primary: #379086;
+    --secondary: #e3b5ba;
+    --accent: #9b4650;
+}
+
+body {
+    margin: 0;
+    font-family: 'Didact Gothic', sans-serif;
+    font-weight: 400;
+    background-color: var(--background);
+    background-image: linear-gradient(var(--secondary), rgb(0, 0, 0, 0) 50vh);
+    color: var(--text);
+}
+
+main {
+    text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: 'Didact Gothic';
+    font-weight: 700;
+}
+
+html {
+    font-size: 100%;
+}
+
+h1 {
+    font-size: 2.489rem;
+}
+
+h2 {
+    font-size: 2.074rem;
+}
+
+h3 {
+    font-size: 1.728rem;
+}
+
+h4 {
+    font-size: 1.440rem;
+}
+
+h5 {
+    font-size: 1.200rem;
+}
+
+small {
+    font-size: 0.833rem;
+}
+
+.material-symbols-rounded {
+    color: var(--primary);
+    font-variation-settings:
+        'FILL' 1,
+        'wght' 300,
+        'GRAD' 200,
+        'opsz' 48
 }
 
 p {
@@ -7,12 +72,67 @@ p {
     margin-block-end: 0.5em;
 }
 
+button {
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(120%);
+}
+
+button:active {
+    transform: translateY(0.2rem);
+}
+
+hr {
+    margin: 0.2rem 0.5rem 0.2rem 0.5rem;
+    border-color: var(--secondary);
+    border-width: 0.5px;
+}
+
+input {
+    padding: 0.5em 1em 0.5em 1em;
+    box-sizing: border-box;
+    border: none;
+    background-color: var(--accent);
+    color: var(--background);
+    border-radius: 2em;
+}
+
+#search-result-container {
+    width: 80vmin;
+    margin: 1em auto 1em auto;
+    padding: 1em;
+    border-radius: 1em;
+    border-color: var(--accent);
+    border-style: solid;
+    text-align: left;
+}
+
 .search-result {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) auto;
+    gap: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.search-result p {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
 }
 
 .search-result button {
     display: inline-block;
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    border-radius: none;
+    padding: 0;
+    height: fit-content;
+    margin: auto;
+}
+
+.search-result button * {
+    display: block;
 }

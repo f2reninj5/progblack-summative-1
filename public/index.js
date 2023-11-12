@@ -19,7 +19,10 @@ class LastFMRequestBuilder {
         });
         return this.host + searchParams.toString();
     }
-};
+}
+
+$('#search-input').val('hello world');
+onSearch();
 
 function onSearch() {
     const inputValue = $('#search-input').val();
@@ -28,23 +31,54 @@ function onSearch() {
 
     $.post(searchURL, (response) => {
         const trackMatches = response.results.trackmatches.track;
-        $('#results').html('');
+        $('#search-result-container').html('');
 
         for (let track of trackMatches) {
             let div = $(document.createElement('div')).addClass('search-result');
-            let p = $(document.createElement('p'));
+            let artist = $(document.createElement('p'));
+            let title = $(document.createElement('p'));
             let button = $(document.createElement('button'));
-            button.text('+');
-            button.on('click', () => {
-                console.log(track.url);
+            // Icon from Google Fonts API
+            let icon = $(document.createElement('span')).addClass('material-symbols-rounded');
+            icon.html('add_circle');
+
+            button.append(icon);
+            button.on('click', function () {
+                let span = $(this).children('span').first();
+                let iconId = span.html();
+                if (iconId === 'check_circle' || iconId === 'cancel') {
+                    span.html('add_circle');
+                }
+                else {
+                    $(this).children('span').first().html('check_circle');
+                }
             });
+            button.hover(function () {
+                let span = $(this).children('span').first();
+                if (span.html() === 'check_circle') {
+                    span.html('cancel');
+                }
+            }, function () {
+                let span = $(this).children('span').first();
+                if (span.html() === 'cancel') {
+                    span.html('check_circle');
+                }
+            });
+
             // The jQuery text() method escapes any HTML that might be present in the text data
-            p.text(`${track.artist} - ${track.name}`);
-            div.append(p, button);
-            $('#results').append(div);
+            artist.text(track.artist);
+            title.text(track.name);
+            div.append(artist, title, button);
+            $('#search-result-container').append(div);
+            $('#search-result-container').append(document.createElement('hr'));
         }
     });
 }
 
 // $('#search-button').on('click', onSearch);
 $('#search-input').on('input', onSearch);
+// `function` notation gives correct value of `this`
+$('#search-input').on('click', function () {
+    $(this).focus();
+    $(this).select();
+});
