@@ -1,4 +1,24 @@
 
+const user = {};
+
+$.ajax({
+    type: 'POST',
+    url: '/register',
+    data: JSON.stringify({ username: 'fn', password: 'test' }),
+    contentType: 'application/json',
+    success: function (response) {
+        console.log(response);
+    }
+});
+
+$.ajax({
+    type: 'POST',
+    url: '/session/login',
+    success: function (response) {
+        console.log(response.username);
+    }
+});
+
 class LastFMRequestBuilder {
     static host = 'https://ws.audioscrobbler.com/2.0/?';
     static api_key = 'a5f946a067f8945ab819fdb99a0a33ae';
