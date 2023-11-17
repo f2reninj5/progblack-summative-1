@@ -26,6 +26,10 @@ app.post('/session/login', async (request, response) => {
             return response.status(404).send({ message: 'No session with this ID found' });
         }
 
+        if (session.expires <= new Date()) {
+            return response.status(401).send({ message: 'Session expired' });
+        }
+
         const user = session.user;
         return response.json({
             username: user.username
