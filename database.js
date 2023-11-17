@@ -10,6 +10,18 @@ const sequelize = new Sequelize({
     logging: false
 });
 
+const Playlist = sequelize.define('playlist', {
+    name: {
+        type: DataTypes.STRING(64),
+        allowNull: false
+    }
+}, {
+    indexes: [{
+        unique: true,
+        fields: ['userUsername', 'name']
+    }]
+});
+
 const Session = sequelize.define('session', {
     id: {
         type: DataTypes.UUID,
@@ -20,6 +32,17 @@ const Session = sequelize.define('session', {
     },
     expires: {
         type: DataTypes.DATE,
+        allowNull: false
+    }
+});
+
+const Song = sequelize.define('song', {
+    artist: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.STRING,
         allowNull: false
     }
 });
@@ -40,8 +63,17 @@ const User = sequelize.define('user', {
 User.hasMany(Session);
 Session.belongsTo(User);
 
+User.hasMany(Playlist);
+Playlist.belongsTo(User);
+
+Playlist.hasMany(Song);
+Song.belongsToMany(Playlist, {
+    through: 'playlist_songs'
+});
+
 module.exports = {
     sequelize,
+    Playlist,
     Session,
     User
 };

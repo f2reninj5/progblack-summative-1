@@ -17,6 +17,10 @@ module.exports = class Session {
         });
     }
 
+    // /**
+    //  * @param {string} username the username of the user whose session to find
+    //  * @returns a Session object
+    //  */
     // static async findByUsername(username) {
     //     return database.Session.findOne({
     //         where: {
@@ -29,6 +33,10 @@ module.exports = class Session {
     //     });
     // }
 
+    /**
+     * @param {string} id the ID of the session to fetch
+     * @returns a Session object
+     */
     static async fetch(id) {
         return database.Session.findOne({
             where: { id },
