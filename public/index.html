@@ -9,12 +9,43 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <main>
+    <header>
+        <h2>heading</h2>
+    </header>
+
+    <main id="register-page">
+        <h1>Register</h1>
+        <form id="register-form">
+            <label for="register-username">Username</label>
+            <input id="register-username" name="username" type="text" required autocomplete="username">
+            <label for="register-password">Password</label>
+            <input id="register-password" name="password" type="password" required autocomplete="password">
+            <button type="submit">Register</button>
+        </form>
+    </main>
+
+    <main id="login-page" hidden>
+        <h1>Log In</h1>
+        <form id="login-form">
+            <label for="login-username">Username</label>
+            <input id="login-username" name="username" type="text" required autocomplete="username">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" required autocomplete="password">
+            <button type="submit">Log In</button>
+        </form>
+    </main>
+
+    <main id="search-page" hidden>
         <h1>Playlist Thing</h1>
         <label for="search-input">Song Search</label>
         <input id="search-input" type="text">
         <div id="search-result-container"></div>
     </main>
+
+    <footer>
+
+    </footer>
+
     <script src="/index.js"></script>
 </body>
 </html>

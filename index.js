@@ -6,6 +6,7 @@ const Session = require('./models/Session');
 const User = require('./models/User');
 require('dotenv').config();
 
+const DAY = 1000 * 60 * 24;
 const app = new Express();
 
 app.use(bodyParser.json());
@@ -59,6 +60,36 @@ app.post('/register', async (request, response) => {
     catch (error) {
         console.error(error);
         return response.status(500).send({ message: 'Internal error while creating new user.' });
+    }
+});
+
+app.post('/login', async (request, response) => {
+    const credentials = request.body;
+
+    if (!credentials.username || !credentials.password) {
+        return response.status(400).send({ message: 'Missing username or password.' });
+    }
+
+    try {
+        const user = await User.findByUsername(credentials.username);
+
+        if (!user) {
+            return response.status(401).send({ message: 'User with this username not found.' });
+        }
+
+        if (!(await User.validCredentials(credentials.username, credentials.password))) {
+            return response.status(401).send({ message: 'Incorrect password given.' });
+        }
+
+        const session = await Session.create(credentials.username);
+
+        return response.cookie('sessionId', session.id, { maxAge: 7 * DAY }).json({
+            username: user.username
+        });
+    }
+    catch (error) {
+        console.error(error);
+        return response.status(500).send({ message: 'Internal error while loggin in.' });
     }
 });
 

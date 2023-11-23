@@ -1,22 +1,34 @@
 
 const user = {};
 
-$.ajax({
-    type: 'POST',
-    url: '/register',
-    data: JSON.stringify({ username: 'fn', password: 'test' }),
-    contentType: 'application/json',
-    success: function (response) {
-        console.log(response);
-    }
-});
+// $.ajax({
+//     type: 'POST',
+//     url: '/register',
+//     data: JSON.stringify({ username: 'fn', password: 'test' }),
+//     contentType: 'application/json',
+//     success: function (response) {
+//         console.log(response);
+//     }
+// });
 
-$.ajax({
-    type: 'POST',
-    url: '/session/login',
-    success: function (response) {
-        console.log(response.username);
-    }
+// $.ajax({
+//     type: 'POST',
+//     url: '/session/login',
+//     success: function (response) {
+//         console.log(response.username);
+//     }
+// });
+
+$('#register-form').submit(async function (event) {
+    event.preventDefault();
+
+    console.log($(this).serialize());
+
+    let result = await fetch('/login', {
+        method: 'POST',
+        body: {}
+    });
+    console.log(result);
 });
 
 class LastFMRequestBuilder {

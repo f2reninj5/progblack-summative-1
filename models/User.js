@@ -48,7 +48,7 @@ module.exports = class User {
      * @param {string} passwordCandidate the password candidate to validate
      * @returns true if the password is valid, otherwise false
      */
-    static validatePassword(passwordHash, passwordCandidate) {
+    static validPassword(passwordHash, passwordCandidate) {
         const candidateHash = this.hashPassword(passwordCandidate);
         return passwordHash === candidateHash;
     }
@@ -58,8 +58,8 @@ module.exports = class User {
      * @param {string} password the user's password to validate
      * @returns true if the credentials are valid, otherwise false
      */
-    static async validateCredentials(username, password) {
+    static async validCredentials(username, password) {
         const user = await this.findByUsername(username);
-        return this.validatePassword(user.password, password);
+        return this.validPassword(user.password, password);
     }
 };
