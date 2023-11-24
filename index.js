@@ -43,6 +43,7 @@ app.post('/session/login', async (request, response) => {
 
 app.post('/register', async (request, response) => {
     const credentials = request.body;
+    console.log(credentials);
 
     if (!credentials.username || !credentials.password) {
         return response.status(400).send({ message: 'Missing username or password.' });

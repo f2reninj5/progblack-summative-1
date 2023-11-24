@@ -19,17 +19,47 @@ const user = {};
 //     }
 // });
 
-$('#register-form').submit(async function (event) {
+async function onAuthSubmit(event) {
     event.preventDefault();
 
-    console.log($(this).serialize());
+    const formId = $(this)[0].id;
+    const username = $(`#${formId} > [name="username"]`).val();
+    const password = $(`#${formId} > [name="password"]`).val();
 
-    let result = await fetch('/login', {
+    console.log(username, password);
+
+    let result = await fetch(`/${formId.split('-form')[0]}`, {
         method: 'POST',
-        body: {}
+        body: JSON.stringify({ username, password })
     });
     console.log(result);
-});
+}
+
+$('#register-form').submit(onAuthSubmit);
+$('#login-form').submit(onAuthSubmit);
+
+class PageManager {
+    static pages = {};
+    static shown = null;
+
+    static registerPages() {
+        for (let main of $('main')) {
+            let name = main.id.split('-page');
+            if (name.length == 2) {
+                this.pages[name[0]] = main;
+            }
+        }
+    }
+
+    static switchToPage(pageId) {
+        if (this.shown) {
+            this.shown.hidden = true;
+        }
+
+        this.shown = this.pages[pageId];
+        this.shown.hidden = false;
+    }
+}
 
 class LastFMRequestBuilder {
     static host = 'https://ws.audioscrobbler.com/2.0/?';
@@ -52,6 +82,9 @@ class LastFMRequestBuilder {
         return this.host + searchParams.toString();
     }
 }
+
+PageManager.registerPages();
+PageManager.switchToPage('register');
 
 $('#search-input').val('hello world');
 onSearch();
