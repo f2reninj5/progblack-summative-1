@@ -43,7 +43,6 @@ app.post('/session/login', async (request, response) => {
 
 app.post('/register', async (request, response) => {
     const credentials = request.body;
-    console.log(credentials);
 
     if (!credentials.username || !credentials.password) {
         return response.status(400).send({ message: 'Missing username or password.' });
@@ -56,7 +55,7 @@ app.post('/register', async (request, response) => {
 
         const user = await User.create(credentials);
         const session = await Session.create(user.username);
-        return response.cookie('sessionId', session.id).redirect('/');
+        return response.cookie('sessionId', session.id).send({ message: 'Successfully created account.' });
     }
     catch (error) {
         console.error(error);
@@ -92,6 +91,11 @@ app.post('/login', async (request, response) => {
         console.error(error);
         return response.status(500).send({ message: 'Internal error while loggin in.' });
     }
+});
+
+app.post('/logout', async (request, response) => {
+    // maybe remove session from database here
+    await response.clearCookie('sessionId').status(200).send({ message: 'Successfully logged out.' });
 });
 
 sequelize.sync({ force: false })
