@@ -1,7 +1,6 @@
-const { Op } = require('sequelize');
 const database = require('../database');
 
-const DAY = 1000 * 60 * 24;
+const DAY = 1000 * 60 * 60 * 24;
 
 module.exports = class Session {
     /**
@@ -41,6 +40,15 @@ module.exports = class Session {
         return database.Session.findOne({
             where: { id },
             include: database.User
+        });
+    }
+
+    /**
+     * @param {string} id the ID of the session to delete
+     */
+    static async delete(id) {
+        await database.Session.destroy({
+            where: { id }
         });
     }
 };

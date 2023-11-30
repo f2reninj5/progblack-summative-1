@@ -6,7 +6,7 @@ const Session = require('./models/Session');
 const User = require('./models/User');
 require('dotenv').config();
 
-const DAY = 1000 * 60 * 24;
+const DAY = 1000 * 60 * 60 * 24;
 const app = new Express();
 
 app.use(bodyParser.json());
@@ -89,12 +89,22 @@ app.post('/login', async (request, response) => {
     }
     catch (error) {
         console.error(error);
-        return response.status(500).send({ message: 'Internal error while loggin in.' });
+        return response.status(500).send({ message: 'Internal error while logging in.' });
     }
 });
 
 app.post('/logout', async (request, response) => {
-    // maybe remove session from database here
+    const sessionId = request.cookies.sessionId;
+
+    if (sessionId) {
+        try {
+            await Session.delete(sessionId);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     await response.clearCookie('sessionId').status(200).send({ message: 'Successfully logged out.' });
 });
 
