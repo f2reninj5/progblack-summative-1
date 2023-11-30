@@ -9,6 +9,18 @@
 //     }
 // });
 
+function createLogoutButton() {
+    let logoutButton = $(document.createElement('button'))
+        .text('Log Out')
+        .on('click', async function () {
+            const response = await fetch('/logout', { method: 'POST' });
+            if (!response.ok) { return console.log(response); }
+            PageManager.switchToPage('login');
+            $(this).remove();
+        });
+    $('header').append(logoutButton);
+}
+
 async function onAuthSubmit(event) {
     event.preventDefault();
 
@@ -28,14 +40,7 @@ async function onAuthSubmit(event) {
     const body = await response.json();
     user = body;
     PageManager.switchToPage('search');
-    let logoutButton = $(document.createElement('button'))
-        .text('Log Out')
-        .on('click', async function () {
-            const response = await fetch('/logout', { method: 'POST' });
-            if (!response.ok) { return console.log(response); }
-            PageManager.switchToPage('login');
-        });
-    $('header').append(logoutButton);
+    createLogoutButton();
     form.reset();
 }
 
@@ -46,15 +51,7 @@ async function onAuthSubmit(event) {
         const body = await response.json();
         user = body;
         PageManager.switchToPage('search');
-        let logoutButton = $(document.createElement('button'))
-            .text('Log Out')
-            .on('click', async function () {
-                const response = await fetch('/logout', { method: 'POST' });
-                if (!response.ok) { return console.log(response); }
-                PageManager.switchToPage('login');
-                $('#logout-button').remove();
-            });
-        $('header').append(logoutButton);
+        createLogoutButton();
     }
 })();
 
