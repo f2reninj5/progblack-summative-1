@@ -1,8 +1,4 @@
-const Express = require('express');
-
-const app = new Express();
-
-app.use(Express.static('public'));
+const app = require('./app');
 
 app.listen(8080, () => {
     console.log('Listening on port 8080...');
