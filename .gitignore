@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 # macOS file system
 **/.DS_Store
+
+.env
