@@ -2,6 +2,7 @@ const Express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { sequelize } = require('./database');
+const Playlist = require('./models/Playlist');
 const Session = require('./models/Session');
 const User = require('./models/User');
 require('dotenv').config();
@@ -106,6 +107,40 @@ app.post('/logout', async (request, response) => {
     }
 
     await response.clearCookie('sessionId').status(200).send({ message: 'Successfully logged out.' });
+});
+
+app.post('/user/:username/playlist/:name/', async (request, response) => {
+    const token = request.get('Authorization')?.split('Bearer ')[1];
+    const username = request.params.username;
+    const name = request.params.name;
+
+    if (!token) {
+        return response.status(401).send({ message: 'Missing token.' });
+    }
+
+    try {
+        if ((await Session.fetch(token))?.userUsername !== username) {
+            return response.status(403).send({ message: 'Playlist cannot be created for this user.' });
+        }
+
+        if (!(await User.findByUsername(username))) {
+            return response.status(401).send({ message: 'User with this username not found.' });
+        }
+
+        if (await Playlist.exists(username, name)) {
+            return response.status(409).send({ message: 'Playlist with this name already exists.' });
+        }
+
+        const playlist = await Playlist.createForUser(username, name);
+        return response.json({
+            name: playlist.name,
+            songs: []
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return response.status(500).send({ message: 'Internal error while creating playlist.' });
+    }
 });
 
 sequelize.sync({ force: false })

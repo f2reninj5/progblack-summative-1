@@ -18,7 +18,7 @@ module.exports = class User {
     * @returns true if a user was found, otherwise false
     */
     static async existsByUsername(username) {
-        return (await this.findByUsername(username)) ? true : false;
+        return !!(await this.findByUsername(username));
     }
 
     /**
@@ -26,7 +26,6 @@ module.exports = class User {
      * @returns a User object
      */
     static async create(attributes) {
-
         return database.User.create({
             username: attributes.username,
             password: this.hashPassword(attributes.password)
