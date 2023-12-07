@@ -400,4 +400,8 @@ FodyWeavers.xsd
 # macOS file system
 **/.DS_Store
 
+# environment variables
 .env
+
+# test files
+**/*.test.js
