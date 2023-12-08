@@ -25,7 +25,9 @@
             "error",
             "always"
         ],
-        "no-unused-vars": "warn"
+        "no-unused-vars": "warn",
+        "no-empty": "warn",
+        "indent": "warn"
     },
     "ignorePatterns": [
         "**/*.test.js",

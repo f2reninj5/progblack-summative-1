@@ -74,10 +74,13 @@ const Playlist = {
             user: {
                 username
             },
-            name
+            name,
+            songs: []
         };
         playlists.push(playlist);
         write(Model.Playlist, playlists);
         return playlist;
     }
 };
+
+module.exports = { Playlist, User };
