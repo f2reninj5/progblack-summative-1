@@ -24,13 +24,15 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-unused-vars": "warn"
     },
     "ignorePatterns": [
         "**/*.test.js",
         "public/**/*"
     ],
     "globals": {
-        "process": "readonly"
+        "process": "readonly",
+        "__dirname": "readonly"
     }
 }

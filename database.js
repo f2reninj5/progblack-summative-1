@@ -1,79 +1,83 @@
-const { Sequelize, DataTypes } = require('sequelize');
-require('dotenv').config();
+const fs = require('fs');
 
-const sequelize = new Sequelize({
-    host: process.env.HOST,
-    database: process.env.DATABASE,
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
-    dialect: 'mysql',
-    logging: false
-});
+/**
+ * @enum { string }
+ */
+const Model = {
+    User: 'users.json',
+    Playlist: 'playlists.json'
+};
 
-const Playlist = sequelize.define('playlist', {
-    name: {
-        type: DataTypes.STRING(64),
-        allowNull: false
-    }
-}, {
-    indexes: [{
-        unique: true,
-        fields: ['userUsername', 'name']
-    }]
-});
+/**
+ * @param {Model} model which type of object is being read
+ */
+function read(model) {
+    const path = ['data', model].join('/');
+    return JSON.parse(fs.readFileSync(path));
+}
 
-const Session = sequelize.define('session', {
-    id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        allowNull: false,
-        unique: true,
-        defaultValue: DataTypes.UUIDV4
+/**
+ * @param {Model} model which type of object is being written
+ * @param {{[key: string]: any}[]} data the data to write
+ */
+function write(model, data) {
+    const path = ['data', model].join('/');
+    fs.writeFileSync(path, JSON.stringify(data));
+}
+
+const User = {
+    /**
+     * @param {string} username the username of the user to find
+     * @returns a User object
+     */
+    find: function (username) {
+        const users = read(Model.User);
+        const user = users.find((user) => user.username == username);
+        return user || null;
     },
-    expires: {
-        type: DataTypes.DATE,
-        allowNull: false
+    /**
+     * @param {string} username the username of the user to create
+     * @param {{}} data
+     * @returns a User object
+     */
+    create: function (username, data) {
+        const users = read(Model.User);
+        const user = {
+            username,
+            createdAt: Date.now()
+        };
+        users.push(user);
+        write(Model.User, users);
+        return user;
     }
-});
+};
 
-const Song = sequelize.define('song', {
-    artist: {
-        type: DataTypes.STRING,
-        allowNull: false
+const Playlist = {
+    /**
+     * @param {string} username the username of the user whose playlist to find
+     * @param {string} name the name of the playlist to find
+     * @returns a Playlist object
+     */
+    find: function (username, name) {
+        const playlists = read(Model.Playlist);
+        const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
+        return playlist || null;
     },
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false
+    /**
+     * @param {*} username the username of the user whose playlist to create
+     * @param {*} name the name of the playlist to create
+     * @returns a Playlist object
+     */
+    create: function (username, name) {
+        const playlists = read(Model.Playlist);
+        const playlist = {
+            user: {
+                username
+            },
+            name
+        };
+        playlists.push(playlist);
+        write(Model.Playlist, playlists);
+        return playlist;
     }
-});
-
-const User = sequelize.define('user', {
-    username: {
-        type: DataTypes.STRING(16),
-        primaryKey: true,
-        allowNull: false,
-        unique: true
-    },
-    password: {
-        type: DataTypes.STRING(32).BINARY,
-        allowNull: false
-    }
-});
-
-User.hasMany(Session);
-Session.belongsTo(User);
-
-User.hasMany(Playlist);
-Playlist.belongsTo(User);
-
-Playlist.hasMany(Song);
-Song.belongsToMany(Playlist, {
-    through: 'playlist_songs'
-});
-
-module.exports = {
-    sequelize,
-    Playlist,
-    Session,
-    User
 };
