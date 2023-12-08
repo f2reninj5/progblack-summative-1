@@ -8,6 +8,18 @@ const Model = {
     Playlist: 'playlists.json'
 };
 
+(function initialiseData() {
+    if (!fs.existsSync('data')) {
+        fs.mkdirSync('data');
+    }
+    for (let key in Model) {
+        const path = ['data', Model[key]].join('/');
+        if (!fs.existsSync(path)) {
+            fs.writeFileSync(path, JSON.stringify([]));
+        }
+    }
+})();
+
 /**
  * @param {Model} model which type of object is being read
  */
@@ -28,7 +40,7 @@ function write(model, data) {
 const User = {
     /**
      * @param {string} username the username of the user to find
-     * @returns a User object
+     * @returns a User object or null if not found
      */
     find: function (username) {
         const users = read(Model.User);
@@ -37,13 +49,14 @@ const User = {
     },
     /**
      * @param {string} username the username of the user to create
-     * @param {{}} data
+     * @param {{profileColor: string}} data
      * @returns a User object
      */
     create: function (username, data) {
         const users = read(Model.User);
         const user = {
             username,
+            profileColor: data.profileColor,
             createdAt: Date.now()
         };
         users.push(user);
@@ -56,7 +69,7 @@ const Playlist = {
     /**
      * @param {string} username the username of the user whose playlist to find
      * @param {string} name the name of the playlist to find
-     * @returns a Playlist object
+     * @returns a Playlist object or null if not found
      */
     find: function (username, name) {
         const playlists = read(Model.Playlist);
@@ -75,7 +88,8 @@ const Playlist = {
                 username
             },
             name,
-            songs: []
+            songs: [],
+            createdAt: Date.now()
         };
         playlists.push(playlist);
         write(Model.Playlist, playlists);
