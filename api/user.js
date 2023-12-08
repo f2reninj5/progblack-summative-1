@@ -27,8 +27,12 @@ user.post('/', (request, response) => {
     const body = request.body;
     let user;
 
-    if (!body.username) {
-        return response.status(400).send({ message: 'Missing username.' });
+    if (!body.username || !body.profileColour) {
+        return response.status(400).send({ message: 'Missing username or profileColour.' });
+    }
+
+    if (!(/^#[a-fA-F0-9]{6}$/.test(body.profileColour))) {
+        return response.status(400).send({ message: 'profileColour must be in hexadecimal format `#abcdef`.' });
     }
 
     try {
@@ -36,7 +40,7 @@ user.post('/', (request, response) => {
             return response.status(409).send({ message: 'User with this username already exists.' });
         }
 
-        user = database.User.create(body.username);
+        user = database.User.create(body.username, { profileColour: body.profileColour.toLowerCase() });
     }
     catch (error) {
         console.log(error);

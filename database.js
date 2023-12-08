@@ -17,6 +17,18 @@ const Model = {
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, JSON.stringify([]));
         }
+        else {
+            const contents = fs.readFileSync(path);
+            try {
+                JSON.parse(contents);
+            }
+            catch (error) {
+                console.log(`Failed to parse file at ${path}:`);
+                console.log(contents.toString());
+                console.log('Creating new file...');
+                fs.writeFileSync(path, JSON.stringify([]));
+            }
+        }
     }
 })();
 
@@ -56,7 +68,7 @@ const User = {
         const users = read(Model.User);
         const user = {
             username,
-            profileColor: data.profileColor,
+            profileColor: data.profileColour,
             createdAt: Date.now()
         };
         users.push(user);
@@ -92,6 +104,32 @@ const Playlist = {
             createdAt: Date.now()
         };
         playlists.push(playlist);
+        write(Model.Playlist, playlists);
+        return playlist;
+    },
+    /**
+     * @param {string} username the username of the user whose playlist to update
+     * @param {string} name the name of the playlist to update
+     * @param {{artist: string, title: string}} song a Song object to add to the playlist
+     * @returns a Playlist object
+     */
+    addSong: function (username, name, song) {
+        const playlists = read(Model.Playlist);
+        const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
+        playlist.songs.push(song);
+        write(Model.Playlist, playlists);
+        return playlist;
+    },
+    /**
+     * @param {string} username the username of the user whose playlist to update
+     * @param {string} name the name of the playlist to update
+     * @param {number} index the index (from 0) of the song to remove
+     * @returns a Playlist object
+     */
+    removeSong: function (username, name, index) {
+        const playlists = read(Model.Playlist);
+        const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
+        playlist.songs.splice(index, 1);
         write(Model.Playlist, playlists);
         return playlist;
     }

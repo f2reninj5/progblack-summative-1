@@ -13,6 +13,8 @@ playlist.use('/:name', (request, response, next) => {
     next();
 });
 
+playlist.use('/:name/song', require('./playlistSong'));
+
 // create
 playlist.post('/', (request, response) => {
     const body = request.body;
