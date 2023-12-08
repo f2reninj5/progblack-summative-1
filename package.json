@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "startdev": "nodemon index.js",
+    "pretest": "eslint *.js",
     "test": "jest"
   },
   "repository": {
@@ -28,6 +29,7 @@
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
+    "eslint": "^8.55.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "supertest": "^6.3.3"

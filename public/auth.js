@@ -1,14 +1,4 @@
 
-// $.ajax({
-//     type: 'POST',
-//     url: '/register',
-//     data: JSON.stringify({ username: 'fn', password: 'test' }),
-//     contentType: 'application/json',
-//     success: function (response) {
-//         console.log(response);
-//     }
-// });
-
 function createLogoutButton() {
     let logoutButton = $(document.createElement('button'))
         .text('Log Out')
