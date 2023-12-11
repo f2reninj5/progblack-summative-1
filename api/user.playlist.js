@@ -3,9 +3,9 @@ const database = require('./sources/database');
 
 const playlist = Express.Router();
 
-playlist.use('/:name', (request, response, next) => {
+playlist.use('/:name', async (request, response, next) => {
     const name = request.params.name;
-    const playlist = database.Playlist.find(request.user.username, name);
+    const playlist = await database.Playlist.find(request.user.username, name);
 
     if (!playlist) {
         return response.status(404).send({ message: 'No playlist with this name found.' });
@@ -18,7 +18,7 @@ playlist.use('/:name', (request, response, next) => {
 playlist.use('/:name/song', require('./user.playlist.song'));
 
 // create
-playlist.post('/', (request, response) => {
+playlist.post('/', async (request, response) => {
     const body = request.body;
     let playlist;
 
@@ -27,11 +27,11 @@ playlist.post('/', (request, response) => {
     }
 
     try {
-        if (database.Playlist.find(request.user.username, body.name)) {
+        if (await database.Playlist.find(request.user.username, body.name)) {
             return response.status(409).send({ message: 'Playlist with this name already exists.' });
         }
 
-        playlist = database.Playlist.create(request.user.username, body.name);
+        playlist = await database.Playlist.create(request.user.username, body.name);
     }
     catch (error) {
         console.log(error);
@@ -42,7 +42,7 @@ playlist.post('/', (request, response) => {
 });
 
 // find
-playlist.get('/:name', (request, response) => {
+playlist.get('/:name', async (request, response) => {
     const playlist = request.playlist;
     return response.status(200).json(playlist);
 });

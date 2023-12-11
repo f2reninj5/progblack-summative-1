@@ -3,12 +3,12 @@ const database = require('./sources/database');
 
 const user = Express.Router();
 
-user.use('/:username', (request, response, next) => {
+user.use('/:username', async (request, response, next) => {
     const username = request.params.username;
     let user;
 
     try {
-        user = database.User.find(username);
+        user = await database.User.find(username);
     }
     catch (error) {
         console.log(error);
@@ -26,7 +26,7 @@ user.use('/:username', (request, response, next) => {
 user.use('/:username/playlist', require('./user.playlist'));
 
 // create
-user.post('/', (request, response) => {
+user.post('/', async (request, response) => {
     const body = request.body;
     let user;
 
@@ -39,11 +39,11 @@ user.post('/', (request, response) => {
     }
 
     try {
-        if (database.User.find(body.username)) {
+        if (await database.User.find(body.username)) {
             return response.status(409).send({ message: 'User with this username already exists.' });
         }
 
-        user = database.User.create(body.username, { profileColour: body.profileColour.toLowerCase() });
+        user = await database.User.create(body.username, { profileColour: body.profileColour.toLowerCase() });
     }
     catch (error) {
         console.log(error);
@@ -59,9 +59,9 @@ user.get('/:username', (request, response) => {
 });
 
 // delete
-user.delete('/:username', (request, response) => {
+user.delete('/:username', async (request, response) => {
     try {
-        database.User.delete(request.user.username);
+        await database.User.delete(request.user.username);
     }
     catch (error) {
         console.log(error);

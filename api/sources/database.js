@@ -1,6 +1,7 @@
 const fs = require('fs');
+const path = require('path');
 
-const root = '../data';
+const root = '../../data';
 
 /**
  * @enum { string }
@@ -10,12 +11,20 @@ const Model = {
     Playlist: 'playlists.json'
 };
 
+/**
+ * @param {Model} model which type of object is being read
+ * @returns the resolved path to the object file
+ */
+function resolve(model) {
+    return path.resolve(__dirname, root, model);
+}
+
 (function initialiseData() {
     if (!fs.existsSync(root)) {
         fs.mkdirSync(root);
     }
     for (let key in Model) {
-        const path = [root, Model[key]].join('/');
+        const path = resolve(Model[key]);
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, JSON.stringify([]));
         }
@@ -34,21 +43,27 @@ const Model = {
     }
 })();
 
+// https://nodejs.org/dist/latest-v20.x/docs/api/fs.html#promises-api
+
 /**
  * @param {Model} model which type of object is being read
+ * @returns the file contents parsed as an object
  */
-function read(model) {
-    const path = [root, model].join('/');
-    return JSON.parse(fs.readFileSync(path));
+async function read(model) {
+    const path = resolve(model);
+    let k = await fs.promises.readFile(path);
+    console.log(path);
+    console.log(k, JSON.parse(k));
+    return JSON.parse(await fs.promises.readFile(path));
 }
 
 /**
  * @param {Model} model which type of object is being written
  * @param {{[key: string]: any}[]} data the data to write
  */
-function write(model, data) {
-    const path = [root, model].join('/');
-    fs.writeFileSync(path, JSON.stringify(data));
+async function write(model, data) {
+    const path = resolve(model);
+    await fs.promises.writeFile(path, JSON.stringify(data));
 }
 
 const User = {
@@ -56,8 +71,9 @@ const User = {
      * @param {string} username the username of the user to find
      * @returns a User object or null if not found
      */
-    find: function (username) {
-        const users = read(Model.User);
+    find: async function (username) {
+        const users = await read(Model.User);
+        console.log(users);
         const user = users.find((user) => user.username == username);
         return user || null;
     },
@@ -66,23 +82,23 @@ const User = {
      * @param {{profileColor: string}} data
      * @returns a User object
      */
-    create: function (username, data) {
-        const users = read(Model.User);
+    create: async function (username, data) {
+        const users = await read(Model.User);
         const user = {
             username,
             profileColor: data.profileColour,
             createdAt: Date.now()
         };
         users.push(user);
-        write(Model.User, users);
+        await write(Model.User, users);
         return user;
     },
     /**
      * @param {string} username the username of the user to delete
      */
-    delete: function (username) {
-        const users = read(Model.User);
-        write(Model.User, users.filter((user) => user.username !== username));
+    delete: async function (username) {
+        const users = await read(Model.User);
+        await write(Model.User, users.filter((user) => user.username !== username));
     }
 };
 
@@ -92,18 +108,18 @@ const Playlist = {
      * @param {string} name the name of the playlist to find
      * @returns a Playlist object or null if not found
      */
-    find: function (username, name) {
-        const playlists = read(Model.Playlist);
+    find: async function (username, name) {
+        const playlists = await read(Model.Playlist);
         const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
         return playlist || null;
     },
     /**
-     * @param {*} username the username of the user whose playlist to create
-     * @param {*} name the name of the playlist to create
+     * @param {string} username the username of the user whose playlist to create
+     * @param {string} name the name of the playlist to create
      * @returns a Playlist object
      */
-    create: function (username, name) {
-        const playlists = read(Model.Playlist);
+    create: async function (username, name) {
+        const playlists = await read(Model.Playlist);
         const playlist = {
             user: {
                 username
@@ -113,7 +129,7 @@ const Playlist = {
             createdAt: Date.now()
         };
         playlists.push(playlist);
-        write(Model.Playlist, playlists);
+        await write(Model.Playlist, playlists);
         return playlist;
     },
     /**
@@ -122,11 +138,11 @@ const Playlist = {
      * @param {{artist: string, title: string}} song a Song object to add to the playlist
      * @returns a Playlist object
      */
-    addSong: function (username, name, song) {
-        const playlists = read(Model.Playlist);
+    addSong: async function (username, name, song) {
+        const playlists = await read(Model.Playlist);
         const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
         playlist.songs.push(song);
-        write(Model.Playlist, playlists);
+        await write(Model.Playlist, playlists);
         return playlist;
     },
     /**
@@ -135,11 +151,11 @@ const Playlist = {
      * @param {number} index the index (from 0) of the song to remove
      * @returns a Playlist object
      */
-    removeSong: function (username, name, index) {
-        const playlists = read(Model.Playlist);
+    removeSong: async function (username, name, index) {
+        const playlists = await read(Model.Playlist);
         const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
         playlist.songs.splice(index, 1);
-        write(Model.Playlist, playlists);
+        await write(Model.Playlist, playlists);
         return playlist;
     }
 };

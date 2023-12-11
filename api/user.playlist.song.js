@@ -4,7 +4,7 @@ const database = require('./sources/database');
 const song = Express.Router();
 
 // addSong
-song.post('/', (request, response) => {
+song.post('/', async (request, response) => {
     const body = request.body;
     let playlist;
 
@@ -13,7 +13,7 @@ song.post('/', (request, response) => {
     }
 
     try {
-        playlist = database.Playlist.addSong(request.user.username, request.playlist.name, {
+        playlist = await database.Playlist.addSong(request.user.username, request.playlist.name, {
             artist: body.artist,
             title: body.title
         });
@@ -27,7 +27,7 @@ song.post('/', (request, response) => {
 });
 
 // removeSong
-song.delete('/:index', (request, response) => {
+song.delete('/:index', async (request, response) => {
     let index = request.params.index;
     let playlist;
 
@@ -47,7 +47,7 @@ song.delete('/:index', (request, response) => {
     }
 
     try {
-        playlist = database.Playlist.removeSong(request.user.username, request.playlist.name, index);
+        playlist = await database.Playlist.removeSong(request.user.username, request.playlist.name, index);
     }
     catch (error) {
         console.log(error);
