@@ -12,7 +12,7 @@ song.get('/:title', async (request, response) => {
     }
     catch (error) {
         console.log(error);
-        return response.status(500).send({ message: 'Internal server error while finding song.' });
+        return response.status(502).send({ message: 'Error while finding songs on last.fm.' });
     }
 
     return response.status(200).json(song);

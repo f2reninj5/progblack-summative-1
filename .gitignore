@@ -403,8 +403,5 @@ FodyWeavers.xsd
 # environment variables
 .env
 
-# test files
-**/*.test.js
-
 # local data files
 data/*

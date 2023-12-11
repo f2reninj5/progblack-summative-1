@@ -5,7 +5,14 @@ const playlist = Express.Router();
 
 playlist.use('/:name', async (request, response, next) => {
     const name = request.params.name;
-    const playlist = await database.Playlist.find(request.user.username, name);
+    let playlist;
+
+    try {
+        await database.Playlist.find(request.user.username, name);
+    }
+    catch (error) {
+        return response.status(500).send({ message: 'Internal server error while finding playlist.' });
+    }
 
     if (!playlist) {
         return response.status(404).send({ message: 'No playlist with this name found.' });
