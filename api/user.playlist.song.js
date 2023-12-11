@@ -1,5 +1,5 @@
 const Express = require('express');
-const database = require('../database');
+const database = require('./sources/database');
 
 const song = Express.Router();
 

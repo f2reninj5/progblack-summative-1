@@ -1,19 +1,21 @@
 const Express = require('express');
-const database = require('../database');
+const database = require('./sources/database');
 
 const playlist = Express.Router();
 
 playlist.use('/:name', (request, response, next) => {
     const name = request.params.name;
     const playlist = database.Playlist.find(request.user.username, name);
+
     if (!playlist) {
-        return response.status(404).send({ message: 'No Playlist with this name found.' });
+        return response.status(404).send({ message: 'No playlist with this name found.' });
     }
+
     request.playlist = playlist;
     next();
 });
 
-playlist.use('/:name/song', require('./playlistSong'));
+playlist.use('/:name/song', require('./user.playlist.song'));
 
 // create
 playlist.post('/', (request, response) => {

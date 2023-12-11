@@ -1,11 +1,12 @@
 const Express = require('express');
-const database = require('../database');
+const database = require('./sources/database');
 
 const user = Express.Router();
 
 user.use('/:username', (request, response, next) => {
     const username = request.params.username;
     let user;
+
     try {
         user = database.User.find(username);
     }
@@ -13,14 +14,16 @@ user.use('/:username', (request, response, next) => {
         console.log(error);
         return response.status(500).send({ message: 'Internal server error while finding user.' });
     }
+
     if (!user) {
-        return response.status(404).send({ message: 'No User with this username found.' });
+        return response.status(404).send({ message: 'No user with this username found.' });
     }
+
     request.user = user;
     next();
 });
 
-user.use('/:username/playlist', require('./playlist'));
+user.use('/:username/playlist', require('./user.playlist'));
 
 // create
 user.post('/', (request, response) => {
@@ -53,6 +56,19 @@ user.post('/', (request, response) => {
 // find
 user.get('/:username', (request, response) => {
     return response.status(200).json(request.user);
+});
+
+// delete
+user.delete('/:username', (request, response) => {
+    try {
+        database.User.delete(request.user.username);
+    }
+    catch (error) {
+        console.log(error);
+        return response.status(500).send({ message: 'Internal server error while deleting user.' });
+    }
+
+    return response.status(200).send({ message: 'Deleted user.' });
 });
 
 module.exports = user;

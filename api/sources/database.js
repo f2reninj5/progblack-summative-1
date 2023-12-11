@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const root = '../data';
+
 /**
  * @enum { string }
  */
@@ -9,11 +11,11 @@ const Model = {
 };
 
 (function initialiseData() {
-    if (!fs.existsSync('data')) {
-        fs.mkdirSync('data');
+    if (!fs.existsSync(root)) {
+        fs.mkdirSync(root);
     }
     for (let key in Model) {
-        const path = ['data', Model[key]].join('/');
+        const path = [root, Model[key]].join('/');
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, JSON.stringify([]));
         }
@@ -36,7 +38,7 @@ const Model = {
  * @param {Model} model which type of object is being read
  */
 function read(model) {
-    const path = ['data', model].join('/');
+    const path = [root, model].join('/');
     return JSON.parse(fs.readFileSync(path));
 }
 
@@ -45,7 +47,7 @@ function read(model) {
  * @param {{[key: string]: any}[]} data the data to write
  */
 function write(model, data) {
-    const path = ['data', model].join('/');
+    const path = [root, model].join('/');
     fs.writeFileSync(path, JSON.stringify(data));
 }
 
@@ -74,6 +76,13 @@ const User = {
         users.push(user);
         write(Model.User, users);
         return user;
+    },
+    /**
+     * @param {string} username the username of the user to delete
+     */
+    delete: function (username) {
+        const users = read(Model.User);
+        write(Model.User, users.filter((user) => user.username !== username));
     }
 };
 

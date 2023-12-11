@@ -10,7 +10,7 @@
     },
     "rules": {
         "indent": [
-            "error",
+            "warn",
             4
         ],
         "linebreak-style": [
@@ -26,8 +26,7 @@
             "always"
         ],
         "no-unused-vars": "warn",
-        "no-empty": "warn",
-        "indent": "warn"
+        "no-empty": "warn"
     },
     "ignorePatterns": [
         "**/*.test.js",
