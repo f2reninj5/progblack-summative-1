@@ -28,13 +28,10 @@ song.post('/', async (request, response) => {
 
 // removeSong
 song.delete('/:index', async (request, response) => {
-    let index = request.params.index;
+    let index = parseInt(request.params.index);
     let playlist;
 
-    try {
-        index = parseInt(index);
-    }
-    catch (error) {
+    if (isNaN(index)) {
         return response.status(400).send({ message: 'Index must be an integer.' });
     }
 
@@ -42,7 +39,7 @@ song.delete('/:index', async (request, response) => {
         return response.status(400).send({ message: 'Cannot remove song from empty playlist.' });
     }
 
-    if (request.playlist.songs.length <= index) {
+    if (index >= request.playlist.songs.length || index < 0) {
         return response.status(400).send({ message: 'Index is out of range.' });
     }
 

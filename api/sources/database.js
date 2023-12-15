@@ -51,9 +51,6 @@ function resolve(model) {
  */
 async function read(model) {
     const path = resolve(model);
-    let k = await fs.promises.readFile(path);
-    console.log(path);
-    console.log(k, JSON.parse(k));
     return JSON.parse(await fs.promises.readFile(path));
 }
 
@@ -73,7 +70,6 @@ const User = {
      */
     find: async function (username) {
         const users = await read(Model.User);
-        console.log(users);
         const user = users.find((user) => user.username == username);
         return user || null;
     },
@@ -131,6 +127,14 @@ const Playlist = {
         playlists.push(playlist);
         await write(Model.Playlist, playlists);
         return playlist;
+    },
+    /**
+     * @param {string} username the username of the user whose playlist to delete
+     * @param {string} name the name of the playlist to delete
+     */
+    delete: async function (username, name) {
+        const playlists = await read(Model.Playlist);
+        await write(Model.Playlist, playlists.filter((playlist) => !(playlist.user.username === username && playlist.name === name)));
     },
     /**
      * @param {string} username the username of the user whose playlist to update

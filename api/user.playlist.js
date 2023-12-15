@@ -8,7 +8,7 @@ playlist.use('/:name', async (request, response, next) => {
     let playlist;
 
     try {
-        await database.Playlist.find(request.user.username, name);
+        playlist = await database.Playlist.find(request.user.username, name);
     }
     catch (error) {
         return response.status(500).send({ message: 'Internal server error while finding playlist.' });
@@ -52,6 +52,19 @@ playlist.post('/', async (request, response) => {
 playlist.get('/:name', async (request, response) => {
     const playlist = request.playlist;
     return response.status(200).json(playlist);
+});
+
+// delete
+playlist.delete('/:name', async (request, response) => {
+    try {
+        await database.Playlist.delete(request.user.username, request.playlist.name);
+    }
+    catch (error) {
+        console.log(error);
+        return response.status(500).send({ message: 'Internal server error while deleting user.' });
+    }
+
+    return response.status(200).send({ message: 'Deleted playlist.' });
 });
 
 module.exports = playlist;
