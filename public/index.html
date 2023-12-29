@@ -12,6 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 </head>
 <body>
+    <div class="background"></div>
+
     <header>
         <h1>Playlist Thing</h1>
     </header>
@@ -34,6 +36,19 @@
             <button type="submit">Log In</button>
             <p>Don't have an account? Register <a id="register-link" href="">here</a>.</p>
         </form>
+    </main>
+
+    <main id="profile-page" hidden>
+        <div id="user-info">
+            <h2 class="username">Username</h2>
+            <!-- https://stackoverflow.com/a/26086382 -->
+            <label class="colour-label">
+                <input type="color" value="#ffffff">
+            </label>
+        </div>
+        <div id="playlist-container" class="grid">
+            <div class="playlist">+</div>
+        </div>
     </main>
 
     <main id="search-page" hidden>

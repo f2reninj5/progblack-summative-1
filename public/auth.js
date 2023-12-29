@@ -15,7 +15,8 @@ async function logIn(username) {
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
     user = body;
-    PageManager.switchToPage('search');
+    updateUserProfile();
+    PageManager.switchToPage('profile');
     createLogoutButton();
 }
 
@@ -33,14 +34,17 @@ async function register(username) {
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
     user = body;
-    PageManager.switchToPage('searcg');
+    updateUserProfile();
+    PageManager.switchToPage('profile');
     createLogoutButton();
     Cookies.set('username', username, { path: '/', expires: 7 });
 }
 
 function createLogoutButton() {
+    let icon = $(document.createElement('span')).addClass('material-symbols-rounded');
+    icon.html('logout');
     let logoutButton = $(document.createElement('button'))
-        .text('Log Out')
+        .append(icon)
         .on('click', function () {
             logOut();
             $(this).remove();

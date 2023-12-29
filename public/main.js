@@ -1,4 +1,9 @@
 
+$('input[type=color]').change(function () {
+    $(':root').css('--profile', $(this).val());
+    // update in database
+});
+
 const PageManager = {
     pages: {},
     shown: null,

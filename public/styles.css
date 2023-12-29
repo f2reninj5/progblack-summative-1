@@ -6,15 +6,29 @@
     --primary: #379086;
     --secondary: #e3b5ba;
     --accent: #9b4650;
+    --profile: #ffffff;
+}
+
+html {
+    margin: 0;
+    padding: 0;
 }
 
 body {
     margin: 0;
     font-family: 'Didact Gothic', sans-serif;
     font-weight: 400;
+    color: var(--text);
+}
+
+.background {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
     background-color: var(--background);
     background-image: linear-gradient(var(--secondary), rgb(0, 0, 0, 0) 50vh);
-    color: var(--text);
 }
 
 main {
@@ -74,6 +88,10 @@ p {
 
 button {
     transition: 0.2s;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 2rem;
+    height: 2rem;
 }
 
 button:hover {
@@ -90,6 +108,17 @@ hr {
     border-width: 0.5px;
 }
 
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+header>* {
+    margin: auto 1em auto 1em;
+}
+
 input {
     padding: 0.5em 1em 0.5em 1em;
     box-sizing: border-box;
@@ -97,6 +126,22 @@ input {
     background-color: var(--accent);
     color: var(--background);
     border-radius: 2em;
+}
+
+/* https://stackoverflow.com/a/26086382 */
+input[type=color] {
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.colour-label {
+    background-color: var(--profile);
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    border: var(--accent) solid;
+    border-radius: 2rem;
 }
 
 #search-result-container {

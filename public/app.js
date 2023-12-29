@@ -1,4 +1,23 @@
 
+function updateUserProfile() {
+    for (element of $('.username')) {
+        $(element).text(user.username);
+    }
+    $(':root').css('--profile', user.profileColour);
+}
+
+async function updateUserPlaylists() {
+    // const response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' }); // missing method in api
+    // if (!response.ok) { return; } // handle errors later
+    // const body = await response.json();
+    const playlistContainer = $('#playlist-container');
+    const addButton = $('#playlist-container>*').first();
+    playlistContainer.html(addButton);
+    // for (let playlist of body) {
+
+    // }
+}
+
 $('#search-input').val('hello world');
 onSearch();
 
