@@ -6,11 +6,14 @@
     <title>Hello</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <!-- https://github.com/jquery/jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- https://github.com/js-cookie/js-cookie -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 </head>
 <body>
     <header>
-        <h2>heading</h2>
+        <h1>Playlist Thing</h1>
     </header>
 
     <main id="register-page" hidden>
@@ -18,8 +21,6 @@
         <form id="register-form">
             <label for="register-username">Username</label>
             <input id="register-username" name="username" type="text" required autocomplete="username">
-            <label for="register-password">Password</label>
-            <input id="register-password" name="password" type="password" required autocomplete="password">
             <button type="submit">Register</button>
             <p>Already have an account? Log in <a id="login-link" href="">here</a>.</p>
         </form>
@@ -30,15 +31,12 @@
         <form id="login-form">
             <label for="login-username">Username</label>
             <input id="login-username" name="username" type="text" required autocomplete="username">
-            <label for="login-password">Password</label>
-            <input id="login-password" name="password" type="password" required autocomplete="password">
             <button type="submit">Log In</button>
             <p>Don't have an account? Register <a id="register-link" href="">here</a>.</p>
         </form>
     </main>
 
     <main id="search-page" hidden>
-        <h1>Playlist Thing</h1>
         <label for="search-input">Song Search</label>
         <input id="search-input" type="text">
         <div id="search-result-container"></div>

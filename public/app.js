@@ -1,41 +1,17 @@
 
-class LastFMRequestBuilder {
-    static host = 'https://ws.audioscrobbler.com/2.0/?';
-    static api_key = 'a5f946a067f8945ab819fdb99a0a33ae';
-    static format = 'json';
-
-    static methods = {
-        track: {
-            search: (track) => this.buildURL('track.search', { track })
-        }
-    };
-
-    static buildURL(method, params) {
-        const searchParams = new URLSearchParams({
-            api_key: this.api_key,
-            format: this.format,
-            method: method,
-            ...params
-        });
-        return this.host + searchParams.toString();
-    }
-}
-
 $('#search-input').val('hello world');
 onSearch();
 
 async function onSearch() {
     const inputValue = $('#search-input').val();
     if (!inputValue) { return; }
-    const searchURL = LastFMRequestBuilder.methods.track.search(inputValue);
 
-    const response = await fetch(searchURL, { method: 'POST' });
-    if (!response.ok) { return; }
+    const response = await fetch(`/song/${inputValue}`, { method: 'GET' });
+    if (!response.ok) { return; } // handle errors later
     const body = await response.json();
-    const trackMatches = body.results.trackmatches.track;
     $('#search-result-container').html('');
 
-    for (let track of trackMatches) {
+    for (let track of body) {
         let div = $(document.createElement('div')).addClass('search-result');
         let artist = $(document.createElement('p'));
         let title = $(document.createElement('p'));

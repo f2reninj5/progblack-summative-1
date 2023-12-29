@@ -1,48 +1,56 @@
 
+let user = {};
+
+function logOut() {
+    Cookies.remove('username');
+    user = {};
+    PageManager.switchToPage('login');
+}
+
+async function logIn(username) {
+    if (!Cookies.get(username)) {
+        Cookies.set('username', username, { path: '/', expires: 7 });
+    }
+    const response = await fetch(`/user/${username}`, { method: 'GET' });
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
+    user = body;
+    PageManager.switchToPage('search');
+    createLogoutButton();
+}
+
+async function register(username) {
+    const response = await fetch('/user', {
+        method: 'POST',
+        body: JSON.stringify({
+            username,
+            profileColour: '#ffffff'
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
+    user = body;
+    PageManager.switchToPage('searcg');
+    createLogoutButton();
+    Cookies.set('username', username, { path: '/', expires: 7 });
+}
+
 function createLogoutButton() {
     let logoutButton = $(document.createElement('button'))
         .text('Log Out')
-        .on('click', async function () {
-            const response = await fetch('/logout', { method: 'POST' });
-            if (!response.ok) { return console.log(response); }
-            PageManager.switchToPage('login');
+        .on('click', function () {
+            logOut();
             $(this).remove();
         });
     $('header').append(logoutButton);
 }
 
-async function onAuthSubmit(event) {
-    event.preventDefault();
-
-    const form = $(this)[0];
-    const username = $(`#${form.id} > [name="username"]`).val();
-    const password = $(`#${form.id} > [name="password"]`).val();
-
-    const response = await fetch(`/${form.id.split('-form')[0]}`, { // use jquery ig
-        method: 'POST',
-        body: JSON.stringify({ username, password }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    if (!response.ok) { return; }
-    const body = await response.json();
-    user = body;
-    PageManager.switchToPage('search');
-    createLogoutButton();
-    form.reset();
-}
-
 (async function attemptSessionLogin() {
-    if (getCookie('sessionId')) {
-        const response = await fetch('/session/login', { method: 'POST' });
-        if (!response.ok) { return; }
-        const body = await response.json();
-        user = body;
-        PageManager.switchToPage('search');
-        createLogoutButton();
-    }
+    const username = Cookies.get('username');
+    if (username) { logIn(username); }
 })();
 
 $('#login-link').on('click', function (event) {
@@ -55,5 +63,17 @@ $('#register-link').on('click', function (event) {
     PageManager.switchToPage('register');
 });
 
-$('#register-form').submit(onAuthSubmit);
-$('#login-form').submit(onAuthSubmit);
+$('#register-form').submit(async function (event) {
+    event.preventDefault();
+    const form = $(this)[0];
+    const username = $(`#${form.id} > [name="username"]`).val();
+    await register(username);
+    form.reset();
+});
+$('#login-form').submit(function (event) {
+    event.preventDefault();
+    const form = $(this)[0];
+    const username = $(`#${form.id} > [name="username"]`).val();
+    logIn(username);
+    form.reset();
+});
