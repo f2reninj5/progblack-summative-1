@@ -6,7 +6,7 @@
     --primary: #379086;
     --secondary: #e3b5ba;
     --accent: #9b4650;
-    --profile: #ffffff;
+    --profile: 255, 255, 255;
 }
 
 html {
@@ -136,12 +136,13 @@ input[type=color] {
 }
 
 .colour-label {
-    background-color: var(--profile);
+    background-color: rgb(var(--profile));
     width: 2rem;
     height: 2rem;
     display: inline-block;
     border: var(--accent) solid;
     border-radius: 2rem;
+    margin: auto 0 auto 0;
 }
 
 #search-result-container {
@@ -180,4 +181,37 @@ input[type=color] {
 
 .search-result button * {
     display: block;
+}
+
+.grid {
+    display: grid;
+    max-width: 90%;
+    margin: auto;
+    grid-template-columns: repeat(auto-fill, 15rem);
+    gap: 1rem;
+}
+
+/* https://stackoverflow.com/a/41265350 */
+.playlist {
+    margin: auto;
+    background-color: rgba(var(--profile), 0.4);
+    width: 15rem;
+    height: 15rem;
+    max-height: 40vmin;
+}
+
+.playlist .material-symbols-rounded {
+    font-size: 5rem;
+}
+
+h1.username {
+    -webkit-text-stroke: var(--text) 0.1px;
+    color: rgb(var(--profile));
+}
+
+#user-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
 }

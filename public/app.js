@@ -3,7 +3,7 @@ function updateUserProfile() {
     for (element of $('.username')) {
         $(element).text(user.username);
     }
-    $(':root').css('--profile', user.profileColour);
+    $(':root').css('--profile', hexToRGB(user.profileColour));
 }
 
 async function updateUserPlaylists() {

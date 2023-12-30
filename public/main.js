@@ -1,6 +1,14 @@
 
+function hexToRGB(hex) {
+    let result = [];
+    for (let i = 1; i < 6; i += 2) {
+        result.push(parseInt(hex.slice(i, i + 2), 16));
+    }
+    return result.join(', ');
+}
+
 $('input[type=color]').change(function () {
-    $(':root').css('--profile', $(this).val());
+    $(':root').css('--profile', hexToRGB($(this).val()));
     // update in database
 });
 

@@ -75,14 +75,14 @@ const User = {
     },
     /**
      * @param {string} username the username of the user to create
-     * @param {{profileColor: string}} data
+     * @param {{profileColour: string}} data
      * @returns a User object
      */
     create: async function (username, data) {
         const users = await read(Model.User);
         const user = {
             username,
-            profileColor: data.profileColour,
+            profileColour: data.profileColour,
             createdAt: Date.now()
         };
         users.push(user);
