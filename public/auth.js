@@ -15,7 +15,7 @@ async function logIn(username) {
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
     user = body;
-    updateUserProfile();
+    await updateUserProfile();
     PageManager.switchToPage('profile');
     createLogoutButton();
 }
@@ -34,7 +34,7 @@ async function register(username) {
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
     user = body;
-    updateUserProfile();
+    await updateUserProfile();
     PageManager.switchToPage('profile');
     createLogoutButton();
     Cookies.set('username', username, { path: '/', expires: 7 });

@@ -1,23 +1,56 @@
 
-let playlist = {};
+let playlists = {};
+let displayPlaylist = {};
 
-function updateUserProfile() {
-    for (element of $('.username')) {
+async function updateUserProfile() {
+    for (let element of $('.username')) {
         $(element).text(user.username);
     }
     $(':root').css('--profile', hexToRGB(user.profileColour));
+    $('input[type=color]').val(user.profileColour);
+    await updateUserPlaylists();
 }
 
 async function updateUserPlaylists() {
-    // const response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' }); // missing method in api
-    // if (!response.ok) { return; } // handle errors later
-    // const body = await response.json();
+    const response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' });
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
     const playlistContainer = $('#playlist-container');
-    const addButton = $('#playlist-container>*').first();
-    playlistContainer.html(addButton);
-    // for (let playlist of body) {
+    const buttons = $('#playlist-container>.playlist');
 
-    // }
+    for (let i = 1; i < buttons.length; i++) {
+        buttons[i].remove();
+    }
+
+    for (let playlist of body) {
+        const button = $(document.createElement('button')).addClass('playlist');
+        const h4 = $(document.createElement('h4')).text(playlist.name);
+        const createdAt = new Date(playlist.createdAt);
+        const small = $(document.createElement('small')).text(createdAt.toLocaleDateString());
+        button.append(h4, small);
+        button.on('click', async function () {
+            const response = await fetch(`user/${user.username}/playlist/${playlist.name}`, {
+                method: 'GET'
+            });
+            if (!response.ok) { return; } // handle errors later
+            const body = await response.json();
+            displayPlaylist = body;
+            updatePlaylist();
+            PageManager.switchToPage('playlist');
+        });
+        playlistContainer.append(button);
+    }
+}
+
+function updatePlaylist() {
+    for (let element of $('.playlist-name')) {
+        $(element).text(displayPlaylist.name);
+    }
+    const songContainer = $('#song-container');
+    for (let song of displayPlaylist.songs) {
+        const div = $(document.createElement('div')).text(song.artist, song.title);
+        songContainer.append(div);
+    }
 }
 
 $('input[type=color]').change(async function () {
@@ -32,7 +65,7 @@ $('input[type=color]').change(async function () {
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
     user = body;
-    updateUserProfile();
+    await updateUserProfile();
 });
 
 $('#search-input').val('hello world');
@@ -52,7 +85,6 @@ async function onSearch() {
         let artist = $(document.createElement('p'));
         let title = $(document.createElement('p'));
         let button = $(document.createElement('button'));
-        // Icon from Google Fonts API
         let icon = $(document.createElement('span')).addClass('material-symbols-rounded');
         icon.html('add_circle');
 
@@ -121,8 +153,14 @@ $('#create-playlist-form').submit(async function (event) {
         });
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
-    playlist = body;
-    // updateUserPlaylists();
-    // updatePlaylist();
-    // PageManager.switchToPage('search')
+    displayPlaylist = body;
+    updateUserPlaylists();
+    updatePlaylist();
+    PageManager.switchToPage('playlist');
+    form.reset();
+    $('#create-playlist')[0].hidden = true;
+});
+
+$('button.profile-return').on('click', function () {
+    PageManager.switchToPage('profile');
 });
