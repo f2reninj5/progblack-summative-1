@@ -131,7 +131,7 @@ const Playlist = {
         const playlists = await read(Model.Playlist);
         return playlists
             .filter((playlist) => playlist.user.username === username)
-            .map((playlist) => ({ name: playlist.name, createdAt: playlist.createdAt }));
+            .map((playlist) => ({ name: playlist.name, createdAt: playlist.createdAt, songCount: playlist.songs.length }));
     },
     /**
      * @param {string} username the username of the user whose playlist to create
