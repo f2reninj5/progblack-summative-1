@@ -71,7 +71,9 @@ h5 {
 }
 
 small {
+    display: block;
     font-size: 0.800rem;
+    margin: 0.2rem auto 0.2rem auto;
 }
 
 .material-symbols-rounded {
@@ -217,6 +219,8 @@ input[type=color] {
     width: 15rem;
     height: 15rem;
     max-height: 40vmin;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .playlist .material-symbols-rounded {

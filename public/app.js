@@ -25,9 +25,10 @@ async function updateUserPlaylists() {
     for (let playlist of body) {
         const button = $(document.createElement('button')).addClass('playlist');
         const h4 = $(document.createElement('h4')).text(playlist.name);
+        const smallCount = $(document.createElement('small')).text(`Songs: ${playlist.songCount}`);
         const createdAt = new Date(playlist.createdAt);
-        const small = $(document.createElement('small')).text(createdAt.toLocaleDateString());
-        button.append(h4, small);
+        const smallDate = $(document.createElement('small')).text(createdAt.toLocaleDateString());
+        button.append(h4, smallCount, smallDate);
         button.on('click', async function () {
             const response = await fetch(`user/${user.username}/playlist/${playlist.name}`, {
                 method: 'GET'
