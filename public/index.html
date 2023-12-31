@@ -14,7 +14,7 @@
 <body>
     <div class="background"></div>
 
-    <header>
+    <header class="header">
         <h1>Playlist Thing</h1>
     </header>
 
@@ -40,14 +40,26 @@
 
     <main id="profile-page" hidden>
         <div id="user-info">
-            <h1 class="username">Username</h1>
+            <h2 class="username">Username</h2>
             <!-- https://stackoverflow.com/a/26086382 -->
             <label class="colour-label">
                 <input type="color" value="#ffffff">
             </label>
         </div>
         <div id="playlist-container" class="grid">
-            <button class="playlist"><span class="material-symbols-rounded">add</span></button>
+            <button id="create-playlist-button" class="playlist"><span class="material-symbols-rounded">add</span></button>
+        </div>
+
+        <div id="create-playlist" class="dialogue-background" hidden>
+            <form id="create-playlist-form">
+                <div class="header">
+                    <h3>Create Playlist</h3>
+                    <button id="close-create-playlist-form-button"><span class="material-symbols-rounded">close</span></button>
+                </div>
+                <label for="playlist-name">Playlist Name</label>
+                <input id="playlist-name" name="playlist-name" type="text" min="1" required>
+                <button type="submit">Create</button>
+            </form>
         </div>
     </main>
 

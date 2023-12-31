@@ -7,11 +7,6 @@ function hexToRGB(hex) {
     return result.join(', ');
 }
 
-$('input[type=color]').change(function () {
-    $(':root').css('--profile', hexToRGB($(this).val()));
-    // update in database
-});
-
 const PageManager = {
     pages: {},
     shown: null,

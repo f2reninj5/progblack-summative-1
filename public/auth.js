@@ -74,6 +74,7 @@ $('#register-form').submit(async function (event) {
     await register(username);
     form.reset();
 });
+
 $('#login-form').submit(function (event) {
     event.preventDefault();
     const form = $(this)[0];

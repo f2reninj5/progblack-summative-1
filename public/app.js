@@ -1,4 +1,6 @@
 
+let playlist = {};
+
 function updateUserProfile() {
     for (element of $('.username')) {
         $(element).text(user.username);
@@ -17,6 +19,21 @@ async function updateUserPlaylists() {
 
     // }
 }
+
+$('input[type=color]').change(async function () {
+    const response = await fetch(`/user/${user.username}`, {
+        method: 'PUT',
+        body: JSON.stringify({ profileColour: $(this).val() }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    console.log(response);
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
+    user = body;
+    updateUserProfile();
+});
 
 $('#search-input').val('hello world');
 onSearch();
@@ -77,4 +94,35 @@ $('#search-input').on('input', onSearch);
 $('#search-input').on('click', function () {
     $(this).focus();
     $(this).select();
+});
+
+$('#create-playlist-button').on('click', function () {
+    $('#create-playlist')[0].hidden = false;
+});
+
+$('#close-create-playlist-form-button').on('click', function (event) {
+    event.preventDefault();
+    $('#create-playlist')[0].hidden = true;
+});
+
+$('#create-playlist-form').submit(async function (event) {
+    event.preventDefault();
+    const form = $(this)[0];
+    const name = $(`#${form.id} > [name="playlist-name"]`).val();
+    const response = await fetch(`/user/${user.username}/playlist`,
+        {
+            method: 'POST',
+            body: JSON.stringify({
+                name
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
+    playlist = body;
+    // updateUserPlaylists();
+    // updatePlaylist();
+    // PageManager.switchToPage('search')
 });
