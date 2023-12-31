@@ -11,6 +11,7 @@ playlist.use('/:name', async (request, response, next) => {
         playlist = await database.Playlist.find(request.user.username, name);
     }
     catch (error) {
+        console.log(error);
         return response.status(500).send({ message: 'Internal server error while finding playlist.' });
     }
 
@@ -46,6 +47,21 @@ playlist.post('/', async (request, response) => {
     }
 
     return response.status(200).json(playlist);
+});
+
+// findAll
+playlist.get('/', async (request, response) => {
+    let playlists;
+
+    try {
+        playlists = await database.Playlist.findAll(request.user.username);
+    }
+    catch (error) {
+        console.log(error);
+        return response.status(500).send({ message: 'Internal server error while finding playlists.' });
+    }
+
+    return response.status(200).json(playlists);
 });
 
 // find

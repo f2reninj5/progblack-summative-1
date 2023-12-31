@@ -70,7 +70,7 @@ const User = {
      */
     find: async function (username) {
         const users = await read(Model.User);
-        const user = users.find((user) => user.username == username);
+        const user = users.find((user) => user.username === username);
         return user || null;
     },
     /**
@@ -103,7 +103,7 @@ const User = {
      */
     update: async function (username, data) {
         const users = await read(Model.User);
-        const user = users.find((user) => user.username == username);
+        const user = users.find((user) => user.username === username);
         if (data.profileColour) {
             user.profileColour = data.profileColour;
         }
@@ -120,8 +120,18 @@ const Playlist = {
      */
     find: async function (username, name) {
         const playlists = await read(Model.Playlist);
-        const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
+        const playlist = playlists.find((playlist) => playlist.user.username === username && playlist.name === name);
         return playlist || null;
+    },
+    /**
+     * @param {string} username the username of the user whose playlists to find
+     * @returns an array of Playlist objects
+     */
+    findAll: async function (username) {
+        const playlists = await read(Model.Playlist);
+        return playlists
+            .filter((playlist) => playlist.user.username === username)
+            .map((playlist) => ({ name: playlist.name, createdAt: playlist.createdAt }));
     },
     /**
      * @param {string} username the username of the user whose playlist to create
@@ -158,7 +168,7 @@ const Playlist = {
      */
     addSong: async function (username, name, song) {
         const playlists = await read(Model.Playlist);
-        const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
+        const playlist = playlists.find((playlist) => playlist.user.username === username && playlist.name === name);
         playlist.songs.push(song);
         await write(Model.Playlist, playlists);
         return playlist;
@@ -171,7 +181,7 @@ const Playlist = {
      */
     removeSong: async function (username, name, index) {
         const playlists = await read(Model.Playlist);
-        const playlist = playlists.find((playlist) => playlist.user.username == username && playlist.name == name);
+        const playlist = playlists.find((playlist) => playlist.user.username === username && playlist.name === name);
         playlist.songs.splice(index, 1);
         await write(Model.Playlist, playlists);
         return playlist;
