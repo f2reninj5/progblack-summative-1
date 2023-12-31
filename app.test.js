@@ -18,6 +18,7 @@ const app = require('./app');
  * - user.playlist
  *  ✓ GET 404 No playlist with this name found.
  *  ✓ GET 200 JSON Playlist object
+ *  ✓ GET 200 JSON of playlists
  *  ✓ POST 400 Missing playlist name.
  *  ✓ POST 409 Playlist with this name already exists.
  *  ✓ POST 200 JSON Playlist object
@@ -190,6 +191,13 @@ describe('/user/:username/playlist methods', () => {
             .get('/user/johnsmith/playlist/favourites')
             .expect(200)
             .expect('Content-Type', /json/)
+            .expect(/"favourites"/);
+    });
+
+    test('GET /user/johnsmith/playlist returns an array of playlists', () => {
+        return request(app)
+            .get('/user/johnsmith/playlist')
+            .expect(200)
             .expect(/"favourites"/);
     });
 
