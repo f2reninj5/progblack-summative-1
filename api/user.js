@@ -87,7 +87,7 @@ user.put('/:username', async (request, response) => {
     }
 
     try {
-        user = await database.User.update(request.user.username, body.profileColour);
+        user = await database.User.update(request.user.username, body);
     }
     catch (error) {
         console.log(error);
