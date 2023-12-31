@@ -75,7 +75,7 @@ const User = {
     },
     /**
      * @param {string} username the username of the user to create
-     * @param {{profileColour: string}} data
+     * @param {{profileColour: string}} data the attributes to give the User object
      * @returns a User object
      */
     create: async function (username, data) {
@@ -95,6 +95,20 @@ const User = {
     delete: async function (username) {
         const users = await read(Model.User);
         await write(Model.User, users.filter((user) => user.username !== username));
+    },
+    /**
+     * @param {string} username the username of the user to update
+     * @param {{profileColour?: string}} data the attributes to replace in the User object
+     * @returns a User object
+     */
+    update: async function (username, data) {
+        const users = await read(Model.User);
+        const user = users.find((user) => user.username == username);
+        if (data.profileColour) {
+            user.profileColour = data.profileColour;
+        }
+        await write(Model.User, users);
+        return user;
     }
 };
 

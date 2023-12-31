@@ -7,6 +7,9 @@ const app = require('./app');
  *  ✓ GET 200 JSON User object
  *  ✓ DELETE 404 No user with this username found.
  *  ✓ DELETE 200 Deleted user.
+ *  ✓ PUT 404 No user with this username found.
+ *  ✓ PUT 400 Missing attributes.
+ *  ✓ PUT 200 JSON User object
  *  ✓ POST 400 Missing username or profileColour.
  *  ✓ POST 400 profileColour must be in hexadecimal format `#abcdef`.
  *  ✓ POST 409 User with this username already exists.
@@ -58,6 +61,13 @@ describe('/user methods', () => {
             .expect(/No user with this username found./);
     });
 
+    test('PUT /user/johnsmith returns 404 when johnsmith doesn\'t exist', () => {
+        return request(app)
+            .put('/user/johnsmith')
+            .expect(404)
+            .expect(/No user with this username found./);
+    });
+
     test('POST /user with missing body returns 400', () => {
         return request(app)
             .post('/user')
@@ -94,6 +104,29 @@ describe('/user methods', () => {
         return request(app)
             .get('/user/johnsmith')
             .expect(200)
+            .expect('Content-Type', /json/)
+            .expect(/"johnsmith"/);
+    });
+
+    test('PUT /user/johnsmith with no attributes returns 400', () => {
+        return request(app)
+            .put('/user/johnsmith')
+            .expect(400)
+            .expect(/Missing attributes./);
+    });
+
+    test('PUT /user/johnsmith with incorrectly formed profileColour attribute returns 400', () => {
+        return request(app)
+            .put('/user/johnsmith')
+            .send({ profileColour: 'ff9999' })
+            .expect(400)
+            .expect(/profileColour must be in hexadecimal format `#abcdef`./);
+    });
+
+    test('PUT /user/johnsmith with correctly formed body returns a User object', () => {
+        return request(app)
+            .put('/user/johnsmith')
+            .send({ profileColour: '#ff9999' })
             .expect('Content-Type', /json/)
             .expect(/"johnsmith"/);
     });

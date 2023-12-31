@@ -71,4 +71,30 @@ user.delete('/:username', async (request, response) => {
     return response.status(200).send({ message: 'Deleted user.' });
 });
 
+// update
+user.put('/:username', async (request, response) => {
+    const body = request.body;
+    let user;
+
+    if (Object.keys(body).length === 0) {
+        return response.status(400).send({ message: 'Missing attributes.' });
+    }
+
+    if (body.profileColour) {
+        if (!(/^#[a-fA-F0-9]{6}$/.test(body.profileColour))) {
+            return response.status(400).send({ message: 'profileColour must be in hexadecimal format `#abcdef`.' });
+        }
+    }
+
+    try {
+        user = await database.User.update(request.user.username, body.profileColour);
+    }
+    catch (error) {
+        console.log(error);
+        return response.status(500).send({ messsage: 'Internal server error while updating user.' });
+    }
+
+    return response.status(200).json(user);
+});
+
 module.exports = user;
