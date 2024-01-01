@@ -24,6 +24,8 @@ body {
     color: var(--text);
     min-height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .background {
@@ -38,6 +40,9 @@ body {
 
 main {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 h1,
@@ -179,6 +184,7 @@ input[type=color] {
     border-color: var(--accent);
     border-style: solid;
     text-align: left;
+    flex-grow: 1;
 }
 
 .search-result {
