@@ -69,12 +69,26 @@
             <h2 class="playlist-name">Playlist</h2>
             <button class="profile-return"><span class="material-symbols-rounded">arrow_back</span></button>
         </div>
+        <div id="playlist-info" class="header">
+            <small>
+                <b>Created</b>
+                <div id="created-at">00/00/0000</div>
+                <div>•</div>
+                <b>Songs</b>
+                <div id="song-count">0</div>
+            </small>
+            <button id="add-songs">Add Songs</button>
+        </div>
         <div id="song-container"></div>
     </main>
 
     <main id="search-page" hidden>
-        <label for="search-input">Song Search</label>
-        <input id="search-input" type="text">
+        <div class="header">
+            <label for="search-input">Song Search
+                <input id="search-input" type="text">
+            </label>
+            <button class="playlist-return"><span class="material-symbols-rounded">arrow_back</span></button>
+        </div>
         <div id="search-result-container"></div>
     </main>
 

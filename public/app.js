@@ -165,3 +165,13 @@ $('#create-playlist-form').submit(async function (event) {
 $('button.profile-return').on('click', function () {
     PageManager.switchToPage('profile');
 });
+
+$('button.playlist-return').on('click', function () {
+    PageManager.switchToPage('playlist');
+});
+
+$('button#add-songs').on('click', function () {
+    PageManager.switchToPage('search');
+    $('#search-input').focus();
+    $('#search-input').select();
+});

@@ -17,15 +17,18 @@ html {
 }
 
 body {
+    position: absolute;
     margin: 0;
     font-family: 'Didact Gothic', sans-serif;
     font-weight: 400;
     color: var(--text);
+    min-height: 100%;
+    width: 100%;
 }
 
 .background {
     z-index: -1;
-    position: absolute;
+    position: fixed;
     top: 0;
     height: 100%;
     width: 100%;
@@ -74,6 +77,10 @@ small {
     display: block;
     font-size: 0.800rem;
     margin: 0.2rem auto 0.2rem auto;
+}
+
+small>div {
+    display: inline;
 }
 
 .material-symbols-rounded {
@@ -130,6 +137,12 @@ hr {
 
 .header>* {
     margin: auto 1em auto 1em;
+}
+
+.header>small {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
 }
 
 input {
@@ -263,4 +276,24 @@ h2.username {
 
 #create-playlist-form>button {
     width: auto;
+}
+
+#playlist-info {
+    padding: 0 4rem 0 4rem;
+    box-sizing: border-box;
+}
+
+main#search-page>.header {
+    justify-content: center;
+}
+
+.header>.profile-return,
+.header>.playlist-return {
+    position: absolute;
+    right: 0;
+}
+
+/* https://stackoverflow.com/a/45675761 */
+[hidden] {
+    display: none
 }
