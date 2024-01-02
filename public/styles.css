@@ -181,7 +181,7 @@ input[type=color] {
     margin: auto 0 auto 0;
 }
 
-#search-result-container {
+.song-container {
     width: 80vmin;
     margin: 1em auto 1em auto;
     padding: 1em;
@@ -218,6 +218,18 @@ input[type=color] {
 
 .search-result button * {
     display: block;
+}
+
+.search-dialogue {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.search-dialogue>.material-symbols-rounded {
+    font-size: 500%;
 }
 
 .grid {

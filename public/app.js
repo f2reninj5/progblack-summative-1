@@ -97,19 +97,30 @@ function updateSongResults() {
     }
 
     if (songResults.length === 0) {
-        const error = $(document.createElement('span'))
-            .addClass('material-symbols-rounded')
-            .text('error');
-        $('#search-result-container').append(error);
+        displayNoSearchResults();
     }
 }
 
 function stallSearchResults() {
-
-    const hourglass = $(document.createElement('span'))
+    const span = $(document.createElement('span'))
         .addClass('material-symbols-rounded')
         .text('hourglass');
-    $('#search-result-container').html(hourglass);
+    const div = $(document.createElement('div'))
+        .addClass('search-dialogue')
+        .append(span);
+    $('#search-result-container').html(div);
+}
+
+function displayNoSearchResults() {
+    const span = $(document.createElement('span'))
+        .addClass('material-symbols-rounded')
+        .text('error');
+    const p = $(document.createElement('p'))
+        .text('No results found.');
+    const div = $(document.createElement('div'))
+        .addClass('search-dialogue')
+        .append(span, p);
+    $('#search-result-container').html(div);
 }
 
 $('input[type=color]').change(async function () {
@@ -132,8 +143,9 @@ onSearch();
 
 async function onSearch() {
     const inputValue = $('#search-input').val();
-    if (!inputValue) { return; }
-
+    if (!inputValue) {
+        return displayNoSearchResults();
+    }
     const response = await fetch(`/song/${inputValue}`, { method: 'GET' });
     if (!response.ok) { return; } // handle errors later
     const body = await response.json();
