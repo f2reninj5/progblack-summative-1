@@ -1,6 +1,7 @@
 
 let playlists = {};
 let displayPlaylist = {};
+let songResults = [];
 
 async function updateUserProfile() {
     for (let element of $('.username')) {
@@ -54,34 +55,10 @@ function updatePlaylist() {
     }
 }
 
-$('input[type=color]').change(async function () {
-    const response = await fetch(`/user/${user.username}`, {
-        method: 'PUT',
-        body: JSON.stringify({ profileColour: $(this).val() }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    console.log(response);
-    if (!response.ok) { return; } // handle errors later
-    const body = await response.json();
-    user = body;
-    await updateUserProfile();
-});
-
-$('#search-input').val('hello world');
-onSearch();
-
-async function onSearch() {
-    const inputValue = $('#search-input').val();
-    if (!inputValue) { return; }
-
-    const response = await fetch(`/song/${inputValue}`, { method: 'GET' });
-    if (!response.ok) { return; } // handle errors later
-    const body = await response.json();
+function updateSongResults() {
     $('#search-result-container').html('');
 
-    for (let track of body) {
+    for (let track of songResults) {
         let div = $(document.createElement('div')).addClass('search-result');
         let artist = $(document.createElement('p'));
         let title = $(document.createElement('p'));
@@ -116,13 +93,73 @@ async function onSearch() {
         artist.text(track.artist);
         title.text(track.name);
         div.append(artist, title, button);
-        $('#search-result-container').append(div);
-        $('#search-result-container').append(document.createElement('hr'));
+        $('#search-result-container').append(div, document.createElement('hr'));
+    }
+
+    if (songResults.length === 0) {
+        const error = $(document.createElement('span'))
+            .addClass('material-symbols-rounded')
+            .text('error');
+        $('#search-result-container').append(error);
     }
 }
 
+function stallSearchResults() {
+
+    const hourglass = $(document.createElement('span'))
+        .addClass('material-symbols-rounded')
+        .text('hourglass');
+    $('#search-result-container').html(hourglass);
+}
+
+$('input[type=color]').change(async function () {
+    const response = await fetch(`/user/${user.username}`, {
+        method: 'PUT',
+        body: JSON.stringify({ profileColour: $(this).val() }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    console.log(response);
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
+    user = body;
+    await updateUserProfile();
+});
+
+$('#search-input').val('hello world');
+onSearch();
+
+async function onSearch() {
+    const inputValue = $('#search-input').val();
+    if (!inputValue) { return; }
+
+    const response = await fetch(`/song/${inputValue}`, { method: 'GET' });
+    if (!response.ok) { return; } // handle errors later
+    const body = await response.json();
+    songResults = body;
+    updateSongResults();
+}
+
+
+let debounceSearch = false;
+let lastSearch = '';
+
 // $('#search-button').on('click', onSearch);
-$('#search-input').on('input', onSearch);
+$('#search-input').on('input', function () {
+    stallSearchResults();
+    if (!debounceSearch) {
+        debounceSearch = true;
+        onSearch();
+        lastSearch = $('#search-input').val();
+        setTimeout(() => {
+            debounceSearch = false;
+            if ($('#search-input').val() !== lastSearch) {
+                onSearch();
+            }
+        }, 1000);
+    }
+});
 // `function` notation gives correct value of `this`
 $('#search-input').on('click', function () {
     $(this).focus();

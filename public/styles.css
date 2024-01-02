@@ -259,7 +259,7 @@ h2.username {
 }
 
 #create-playlist-form {
-    position: absolute;
+    position: fixed;
     background-color: var(--secondary);
     width: 80%;
     max-width: 50rem;
