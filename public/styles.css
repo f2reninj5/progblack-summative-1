@@ -192,21 +192,20 @@ input[type=color] {
     flex-grow: 1;
 }
 
-.search-result {
+.song-listing {
     display: grid;
-    grid-template-columns: repeat(2, 1fr) auto;
     gap: 1em;
     padding-left: 1em;
     padding-right: 1em;
 }
 
-.search-result p {
+.song-listing p {
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
 }
 
-.search-result button {
+.song-listing button {
     display: inline-block;
     background-color: rgba(0, 0, 0, 0);
     border: none;
@@ -216,8 +215,16 @@ input[type=color] {
     margin: auto;
 }
 
-.search-result button * {
+.song-listing button * {
     display: block;
+}
+
+.search-listing {
+    grid-template-columns: repeat(2, 1fr) auto;
+}
+
+.playlist-listing {
+    grid-template-columns: auto repeat(2, 1fr) auto;
 }
 
 .search-dialogue {

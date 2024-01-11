@@ -44,50 +44,104 @@ async function updateUserPlaylists() {
     }
 }
 
+function createSongRemoveButton() {
+    const button = $(document.createElement('button'));
+    const icon = $(document.createElement('span')).addClass('material-symbols-rounded');
+    icon.html('cancel');
+    button.html(icon);
+
+    return button;
+}
+
 function updatePlaylist() {
     for (let element of $('.playlist-name')) {
         $(element).text(displayPlaylist.name);
     }
-    const songContainer = $('#song-container');
-    for (let song of displayPlaylist.songs) {
-        const div = $(document.createElement('div')).text(song.artist, song.title);
+
+    const songContainer = $('#playlist-song-container');
+    songContainer.html('');
+    const createdAt = new Date(displayPlaylist.createdAt);
+    $('#created-at').text(createdAt.toLocaleDateString());
+    $('#song-count').text(displayPlaylist.songs.length);
+
+    for (let i = 0; i < displayPlaylist.songs.length; i++) {
+        const song = displayPlaylist.songs[i];
+        const div = $(document.createElement('div')).addClass(['song-listing', 'playlist-listing']);
+        const index = $(document.createElement('p')).text(i + 1);
+        const title = $(document.createElement('p')).text(song.title);
+        const artist = $(document.createElement('p')).text(song.artist);
+        const removeButton = createSongRemoveButton();
+        div.append(index, title, artist, removeButton);
         songContainer.append(div);
     }
+}
+
+function createSongAddButton(track) {
+    const button = $(document.createElement('button'));
+    const icon = $(document.createElement('span')).addClass('material-symbols-rounded');
+    icon.html('add_circle');
+    button.html(icon);
+
+    button.on('click', async function () {
+        const span = $(this).children('span').first();
+        const iconId = span.html();
+        if (iconId === 'hourglass') {
+            return;
+        }
+        else if (iconId === 'check_circle' || iconId === 'cancel') {
+            span.html('add_circle');
+        }
+        else if (iconId === 'add_circle') {
+            span.html('hourglass');
+
+            const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        artist: track.artist,
+                        title: track.name
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+            if (!response.ok) {
+                return; // handle errors later
+            }
+            const body = await response.json();
+            displayPlaylist = body;
+
+            span.html('check_circle');
+        }
+    });
+    button.hover(
+        // on hover
+        function () {
+            const span = $(this).children('span').first();
+            if (span.html() === 'check_circle') {
+                span.html('cancel');
+            }
+        },
+        // off hover
+        function () {
+            const span = $(this).children('span').first();
+            if (span.html() === 'cancel') {
+                span.html('check_circle');
+            }
+        }
+    );
+
+    return button;
 }
 
 function updateSongResults() {
     $('#search-result-container').html('');
 
-    for (let track of songResults) {
-        let div = $(document.createElement('div')).addClass('search-result');
-        let artist = $(document.createElement('p'));
-        let title = $(document.createElement('p'));
-        let button = $(document.createElement('button'));
-        let icon = $(document.createElement('span')).addClass('material-symbols-rounded');
-        icon.html('add_circle');
-
-        button.append(icon);
-        button.on('click', function () {
-            let span = $(this).children('span').first();
-            let iconId = span.html();
-            if (iconId === 'check_circle' || iconId === 'cancel') {
-                span.html('add_circle');
-            }
-            else {
-                $(this).children('span').first().html('check_circle');
-            }
-        });
-        button.hover(function () {
-            let span = $(this).children('span').first();
-            if (span.html() === 'check_circle') {
-                span.html('cancel');
-            }
-        }, function () {
-            let span = $(this).children('span').first();
-            if (span.html() === 'cancel') {
-                span.html('check_circle');
-            }
-        });
+    for (const track of songResults) {
+        const div = $(document.createElement('div')).addClass(['song-listing', 'search-listing']);
+        const artist = $(document.createElement('p'));
+        const title = $(document.createElement('p'));
+        const button = createSongAddButton(track);
 
         // The jQuery text() method escapes any HTML that might be present in the text data
         artist.text(track.artist);
