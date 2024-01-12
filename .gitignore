@@ -401,7 +401,7 @@ FodyWeavers.xsd
 **/.DS_Store
 
 # environment variables
-.env
+# .env
 
 # local data files
 data/*

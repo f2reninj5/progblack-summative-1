@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello</title>
     <link rel="stylesheet" href="/styles.css">
+    <!-- https://fonts.google.com/?icon.platform=web&icon.set=Material+Symbols&icon.style=Rounded -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
     <!-- https://github.com/jquery/jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -14,7 +15,7 @@
 <body>
     <div class="background"></div>
 
-    <header>
+    <header class="header">
         <h1>Playlist Thing</h1>
     </header>
 
@@ -40,21 +41,55 @@
 
     <main id="profile-page" hidden>
         <div id="user-info">
-            <h1 class="username">Username</h1>
+            <h2 class="username">Username</h2>
             <!-- https://stackoverflow.com/a/26086382 -->
             <label class="colour-label">
                 <input type="color" value="#ffffff">
             </label>
         </div>
         <div id="playlist-container" class="grid">
-            <button class="playlist"><span class="material-symbols-rounded">add</span></button>
+            <button id="create-playlist-button" class="playlist"><span class="material-symbols-rounded">add</span></button>
+        </div>
+
+        <div id="create-playlist" class="dialogue-background" hidden>
+            <form id="create-playlist-form">
+                <div class="header">
+                    <h3>Create Playlist</h3>
+                    <button id="close-create-playlist-form-button"><span class="material-symbols-rounded">close</span></button>
+                </div>
+                <label for="playlist-name">Playlist Name</label>
+                <input id="playlist-name" name="playlist-name" type="text" minlength="1" maxlength="24" required>
+                <button type="submit">Create</button>
+            </form>
         </div>
     </main>
 
+    <main id="playlist-page" hidden>
+        <div class="header">
+            <h2 class="playlist-name">Playlist</h2>
+            <button class="profile-return"><span class="material-symbols-rounded">arrow_back</span></button>
+        </div>
+        <div id="playlist-info" class="header">
+            <small>
+                <b>Created</b>
+                <div id="created-at">00/00/0000</div>
+                <div>•</div>
+                <b>Songs</b>
+                <div id="song-count">0</div>
+            </small>
+            <button id="add-songs"><span class="material-symbols-rounded">add</span></button>
+        </div>
+        <div id="playlist-song-container" class="song-container"></div>
+    </main>
+
     <main id="search-page" hidden>
-        <label for="search-input">Song Search</label>
-        <input id="search-input" type="text">
-        <div id="search-result-container"></div>
+        <div class="header">
+            <label for="search-input">Song Search
+                <input id="search-input" type="text">
+            </label>
+            <button class="playlist-return"><span class="material-symbols-rounded">arrow_back</span></button>
+        </div>
+        <div id="search-result-container" class="song-container"></div>
     </main>
 
     <footer>

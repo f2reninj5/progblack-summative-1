@@ -1,3 +1,5 @@
+/* https://www.realtimecolors.com/?colors=210d0f-f4e1e4-379086-e3b5ba-389489&fonts=Didact%20Gothic-Didact%20Gothic */
+
 @import url('https://fonts.googleapis.com/css?family=Didact Gothic:700|Didact Gothic:400');
 
 :root {
@@ -15,15 +17,20 @@ html {
 }
 
 body {
+    position: absolute;
     margin: 0;
     font-family: 'Didact Gothic', sans-serif;
     font-weight: 400;
     color: var(--text);
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .background {
     z-index: -1;
-    position: absolute;
+    position: fixed;
     top: 0;
     height: 100%;
     width: 100%;
@@ -33,6 +40,9 @@ body {
 
 main {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 h1,
@@ -49,27 +59,38 @@ html {
 }
 
 h1 {
-    font-size: 2.489rem;
+    font-size: 3.053rem;
 }
 
 h2 {
-    font-size: 2.074rem;
+    font-size: 2.442rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 h3 {
-    font-size: 1.728rem;
+    font-size: 1.954rem;
 }
 
 h4 {
-    font-size: 1.440rem;
+    font-size: 1.563rem;
+    margin-block: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 h5 {
-    font-size: 1.200rem;
+    font-size: 1.250rem;
 }
 
 small {
-    font-size: 0.833rem;
+    display: block;
+    font-size: 0.800rem;
+    margin: 0.2rem auto 0.2rem auto;
+}
+
+small>div {
+    display: inline;
 }
 
 .material-symbols-rounded {
@@ -87,11 +108,20 @@ p {
 }
 
 button {
+    position: relative;
     transition: 0.2s;
     padding: 0.5rem;
     border: none;
     border-radius: 2rem;
     height: 2rem;
+    min-width: 2rem;
+}
+
+button>.material-symbols-rounded {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 button:hover {
@@ -108,15 +138,25 @@ hr {
     border-width: 0.5px;
 }
 
-header {
+p.index {
+    width: 2rem;
+}
+
+.header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
 }
 
-header>* {
+.header>* {
     margin: auto 1em auto 1em;
+}
+
+.header>small {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
 }
 
 input {
@@ -145,7 +185,7 @@ input[type=color] {
     margin: auto 0 auto 0;
 }
 
-#search-result-container {
+.song-container {
     width: 80vmin;
     margin: 1em auto 1em auto;
     padding: 1em;
@@ -153,23 +193,24 @@ input[type=color] {
     border-color: var(--accent);
     border-style: solid;
     text-align: left;
+    flex-grow: 1;
 }
 
-.search-result {
+.song-listing {
     display: grid;
-    grid-template-columns: repeat(2, 1fr) auto;
     gap: 1em;
     padding-left: 1em;
     padding-right: 1em;
+    border-radius: 0.5rem;
 }
 
-.search-result p {
+.song-listing p {
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
 }
 
-.search-result button {
+.song-listing button {
     display: inline-block;
     background-color: rgba(0, 0, 0, 0);
     border: none;
@@ -179,8 +220,32 @@ input[type=color] {
     margin: auto;
 }
 
-.search-result button * {
+.song-listing button * {
     display: block;
+}
+
+.song-listing:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-listing {
+    grid-template-columns: repeat(2, 1fr) auto;
+}
+
+.playlist-listing {
+    grid-template-columns: auto repeat(2, 1fr) auto;
+}
+
+.search-dialogue {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.search-dialogue>.material-symbols-rounded {
+    font-size: 500%;
 }
 
 .grid {
@@ -189,6 +254,14 @@ input[type=color] {
     margin: auto;
     grid-template-columns: repeat(auto-fill, 15rem);
     gap: 1rem;
+}
+
+.dialogue-background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* https://stackoverflow.com/a/41265350 */
@@ -204,7 +277,8 @@ input[type=color] {
     font-size: 5rem;
 }
 
-h1.username {
+h2.username,
+h2.playlist-name {
     -webkit-text-stroke: var(--text) 0.1px;
     color: rgb(var(--profile));
 }
@@ -214,4 +288,50 @@ h1.username {
     flex-direction: row;
     justify-content: center;
     gap: 2rem;
+}
+
+#create-playlist-form {
+    position: fixed;
+    background-color: var(--secondary);
+    width: 80%;
+    max-width: 50rem;
+    height: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#create-playlist-form>* {
+    margin: 0 auto 0 auto;
+    width: 80%;
+    text-align: center;
+}
+
+#create-playlist-form>button {
+    width: auto;
+}
+
+#playlist-info {
+    padding: 0 4rem 0 4rem;
+    box-sizing: border-box;
+}
+
+main#search-page>.header {
+    justify-content: center;
+}
+
+/* .header>.profile-return, */
+.header>.playlist-return {
+    position: absolute;
+    right: 0;
+}
+
+/* https://stackoverflow.com/a/45675761 */
+[hidden] {
+    display: none
 }
