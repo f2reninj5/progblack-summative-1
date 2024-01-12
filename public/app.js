@@ -44,11 +44,22 @@ async function updateUserPlaylists() {
     }
 }
 
-function createSongRemoveButton() {
+function createSongRemoveButton(index) {
     const button = $(document.createElement('button'));
     const icon = $(document.createElement('span')).addClass('material-symbols-rounded');
     icon.html('cancel');
     button.html(icon);
+
+    button.on('click', async function () {
+        icon.html('hourglass');
+        const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${index}`, { method: 'DELETE' });
+        if (!response.ok) {
+            return; // handle errors later
+        }
+        const body = await response.json();
+        displayPlaylist = body;
+        updatePlaylist();
+    });
 
     return button;
 }
@@ -67,12 +78,12 @@ function updatePlaylist() {
     for (let i = 0; i < displayPlaylist.songs.length; i++) {
         const song = displayPlaylist.songs[i];
         const div = $(document.createElement('div')).addClass(['song-listing', 'playlist-listing']);
-        const index = $(document.createElement('p')).text(i + 1);
+        const index = $(document.createElement('p')).text(i + 1).addClass('index');
         const title = $(document.createElement('p')).text(song.title);
         const artist = $(document.createElement('p')).text(song.artist);
-        const removeButton = createSongRemoveButton();
+        const removeButton = createSongRemoveButton(i);
         div.append(index, title, artist, removeButton);
-        songContainer.append(div);
+        songContainer.append(div, document.createElement('hr'));
     }
 }
 
@@ -89,18 +100,29 @@ function createSongAddButton(track) {
             return;
         }
         else if (iconId === 'check_circle' || iconId === 'cancel') {
+            span.html('hourglass');
+
+            const songIndex = displayPlaylist.songs.findLastIndex((song) => song.artist === track.artist && song.title === track.name);
+            const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${songIndex}`, { method: 'DELETE', });
+            if (!response.ok) {
+                return; // handle errors later
+            }
+            const body = await response.json();
+            displayPlaylist = body;
+
             span.html('add_circle');
         }
         else if (iconId === 'add_circle') {
             span.html('hourglass');
 
+            const song = {
+                artist: track.artist,
+                title: track.name
+            };
             const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song`,
                 {
                     method: 'POST',
-                    body: JSON.stringify({
-                        artist: track.artist,
-                        title: track.name
-                    }),
+                    body: JSON.stringify(song),
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -139,19 +161,24 @@ function updateSongResults() {
 
     for (const track of songResults) {
         const div = $(document.createElement('div')).addClass(['song-listing', 'search-listing']);
-        const artist = $(document.createElement('p'));
         const title = $(document.createElement('p'));
+        const artist = $(document.createElement('p'));
         const button = createSongAddButton(track);
-
-        // The jQuery text() method escapes any HTML that might be present in the text data
-        artist.text(track.artist);
         title.text(track.name);
-        div.append(artist, title, button);
+        artist.text(track.artist);
+        div.append(title, artist, button);
         $('#search-result-container').append(div, document.createElement('hr'));
     }
 
     if (songResults.length === 0) {
         displayNoSearchResults();
+    }
+}
+
+function resetSearchResultButtons() {
+    const spans = $('.search-listing>button>span.material-symbols-rounded');
+    for (let span of spans) {
+        $(span).html('add_circle');
     }
 }
 
@@ -211,7 +238,6 @@ async function onSearch() {
 let debounceSearch = false;
 let lastSearch = '';
 
-// $('#search-button').on('click', onSearch);
 $('#search-input').on('input', function () {
     stallSearchResults();
     if (!debounceSearch) {
@@ -226,7 +252,7 @@ $('#search-input').on('input', function () {
         }, 1000);
     }
 });
-// `function` notation gives correct value of `this`
+
 $('#search-input').on('click', function () {
     $(this).focus();
     $(this).select();
@@ -270,6 +296,8 @@ $('button.profile-return').on('click', function () {
 });
 
 $('button.playlist-return').on('click', function () {
+    updatePlaylist();
+    resetSearchResultButtons();
     PageManager.switchToPage('playlist');
 });
 

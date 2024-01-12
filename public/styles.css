@@ -138,6 +138,10 @@ hr {
     border-width: 0.5px;
 }
 
+p.index {
+    width: 2rem;
+}
+
 .header {
     display: flex;
     flex-direction: row;
@@ -197,6 +201,7 @@ input[type=color] {
     gap: 1em;
     padding-left: 1em;
     padding-right: 1em;
+    border-radius: 0.5rem;
 }
 
 .song-listing p {
@@ -217,6 +222,10 @@ input[type=color] {
 
 .song-listing button * {
     display: block;
+}
+
+.song-listing:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .search-listing {
@@ -268,7 +277,8 @@ input[type=color] {
     font-size: 5rem;
 }
 
-h2.username {
+h2.username,
+h2.playlist-name {
     -webkit-text-stroke: var(--text) 0.1px;
     color: rgb(var(--profile));
 }
