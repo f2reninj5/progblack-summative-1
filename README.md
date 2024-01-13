@@ -39,6 +39,8 @@
 
 # DELETE /user/:username
 
+Used to delete a user.
+
 ## Path parameters
 
 | Name     | Type   | Description                         |
@@ -62,6 +64,8 @@
 | message | string | A status message. |
 
 # GET /user/:username
+
+Used to get data about a user.
 
 ## Path parameters
 
@@ -90,6 +94,8 @@
 | createdAt     | integer | A JavaScript timestamp from when the user was created.                                   |
 
 # POST /user
+
+Used to create a new user.
 
 ## JSON body parameters
 
@@ -120,6 +126,8 @@
 
 # PUT /user/:username
 
+Used to update an existing user.
+
 ## JSON body parameters
 
 | Name           | Type   | Description                                                                            |
@@ -148,6 +156,8 @@
 
 # DELETE /user/:username/playlist/:name
 
+A user can delete a playlist they made.
+
 ## Path parameters
 
 | Name     | Type   | Description                                        |
@@ -172,6 +182,8 @@
 | message | string | A status message. |
 
 # GET /user/:username/playlist/:name
+
+A user can get all data associate with a playlist they made.
 
 ## Path parameters
 
@@ -218,6 +230,8 @@
 
 # GET /user/:username/playlist
 
+Used to get a list of all playlists made by a user.
+
 ## Path parameters
 
 | Name     | Type   | Description                                     |
@@ -252,6 +266,8 @@
 | songCount | integer | A count of how many songs are in the playlist.             |
 
 # POST /user/:username/playlist
+
+A user can create a new playlist.
 
 ## Path parameters
 
@@ -291,6 +307,8 @@
 | createdAt     | integer | A JavaScript timestamp from when the playlist was created.                  |
 
 # DELETE /user/:username/playlist/:name/song/:index
+
+A user can remove a song from their playlist by the index of the song in the playlist.
 
 ## Path parameters
 
@@ -333,6 +351,8 @@
 | createdAt     | integer | A JavaScript timestamp from when the playlist was created.                  |
 
 # POST /user/:username/playlist/:name/song
+
+A user can add a song to their playlist.
 
 ## Path parameters
 
@@ -385,6 +405,8 @@
 | createdAt     | integer | A JavaScript timestamp from when the playlist was created.                  |
 
 # GET /artist/:name
+
+Used to get data about an artist from the [Last.fm](https://www.last.fm/api/show/artist.getInfo) database.
 
 ## Path parameters
 
@@ -442,6 +464,8 @@
 
 # GET /artist/:name/song/:title
 
+Used to get data about a song from the [Last.fm](https://www.last.fm/api/show/track.getInfo) database.
+
 ## Path parameters
 
 | Name  | Type   | Description                                      |
@@ -456,6 +480,8 @@
 > The response is a slightly transformed version of the response from the Last.fm API found at: https://www.last.fm/api/show/track.getInfo
 
 # GET /song/:song
+
+Used to search the [Last.fm](https://www.last.fm/api/show/track.search) database for a song.
 
 ## Path parameters
 
