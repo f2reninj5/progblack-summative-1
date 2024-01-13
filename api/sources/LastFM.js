@@ -96,7 +96,14 @@ const Song = {
         if (body.error) {
             throw new Error(body.message);
         }
-        return body.results.trackmatches.track;
+        let tracks = body.results.trackmatches.track.map((track) => ({
+            name: track.name,
+            artist: track.artist,
+            url: track.url,
+            listeners: track.listeners,
+            image: track.image.find((image) => image.size === 'large')['#text']
+        }));
+        return tracks;
     }
 };
 
