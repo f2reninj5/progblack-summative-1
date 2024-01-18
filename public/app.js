@@ -12,7 +12,13 @@ function createError(message, timeout = undefined) {
     const closeButtonIcon = $(document.createElement('span')).addClass('material-symbols-rounded').html('close');
 
     closeButton.on('click', function () {
-        error.remove();
+        error.animate({ opacity: 0 },
+            {
+                duration: 1000,
+                complete: () => {
+                    error.remove();
+                }
+            });
     });
 
     closeButton.html(closeButtonIcon);
@@ -20,13 +26,19 @@ function createError(message, timeout = undefined) {
     errorStack.append(error);
 
     if (timeout) {
-        setTimeout(() => {
-            error.remove();
+        setTimeout(async () => {
+            error.animate({ opacity: 0 },
+                {
+                    duration: 1000,
+                    complete: () => {
+                        error.remove();
+                    }
+                });
         }, timeout);
     }
 }
 
-createError('ERM buddy?!.. …Something went WRONG!!', 1000 * 5);
+createError('ERM buddy?!.. …Something went WRONG!!', 1000 * 20);
 
 async function updateUserProfile() {
     for (let element of $('.username')) {

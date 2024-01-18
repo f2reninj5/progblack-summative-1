@@ -356,7 +356,7 @@ main#search-page>.header {
     flex-direction: row;
     gap: 0.5rem;
     justify-content: space-between;
-    animation-name: slide-in;
+    animation-name: fade-slide-in;
     animation-duration: 1s;
 }
 
@@ -364,12 +364,14 @@ main#search-page>.header {
     margin: auto 0 auto 0;
 }
 
-@keyframes slide-in {
+@keyframes fade-slide-in {
     from {
+        opacity: 0;
         transform: translateY(100%);
     }
 
     to {
+        opacity: 1;
         transform: none;
     }
 }
