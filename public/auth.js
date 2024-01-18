@@ -12,7 +12,13 @@ async function logIn(username) {
         Cookies.set('username', username, { path: '/', expires: 7 });
     }
     const response = await fetch(`/user/${username}`, { method: 'GET' });
-    if (!response.ok) { return; } // handle errors later
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return;
+    }
+
     const body = await response.json();
     user = body;
     await updateUserProfile();
@@ -31,7 +37,13 @@ async function register(username) {
             'Content-Type': 'application/json'
         }
     });
-    if (!response.ok) { return; } // handle errors later
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return;
+    }
+
     const body = await response.json();
     user = body;
     await updateUserProfile();

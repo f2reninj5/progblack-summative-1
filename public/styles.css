@@ -357,6 +357,7 @@ main#search-page>.header {
     gap: 0.5rem;
     justify-content: space-between;
     animation: fade-slide-in 1s;
+    border: var(--primary) solid 2px;
 }
 
 .error .material-symbols-rounded {

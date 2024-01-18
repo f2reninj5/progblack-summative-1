@@ -3,37 +3,6 @@ let playlists = {};
 let displayPlaylist = {};
 let songResults = [];
 
-function createError(message, timeout = undefined) {
-    const errorStack = $('#error-stack');
-    const error = $(document.createElement('div')).addClass('error');
-    const icon = $(document.createElement('span')).addClass('material-symbols-rounded').html('error');
-    const messageP = $(document.createElement('p')).text(message);
-    const closeButton = $(document.createElement('button'));
-    const closeButtonIcon = $(document.createElement('span')).addClass('material-symbols-rounded').html('close');
-
-    error.on('animationend', function (event) {
-        if (event.originalEvent.animationName === 'fade-slide-out') {
-            error.remove();
-        }
-    });
-
-    closeButton.on('click', function () {
-        error.css('animation', 'fade-slide-out 1s forwards');
-    });
-
-    closeButton.html(closeButtonIcon);
-    error.append(icon, messageP, closeButton);
-    errorStack.append(error);
-
-    if (timeout) {
-        setTimeout(async () => {
-            error.css('animation', 'fade-slide-out 1s forwards');
-        }, timeout);
-    }
-}
-
-createError('ERM buddy?!.. …Something went WRONG!!', 1000 * 20);
-
 async function updateUserProfile() {
     for (let element of $('.username')) {
         $(element).text(user.username);
@@ -45,7 +14,13 @@ async function updateUserProfile() {
 
 async function updateUserPlaylists() {
     const response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' });
-    if (!response.ok) { return; } // handle errors later
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return;
+    }
+
     const body = await response.json();
     const playlistContainer = $('#playlist-container');
     const buttons = $('#playlist-container>.playlist');
@@ -65,7 +40,13 @@ async function updateUserPlaylists() {
             const response = await fetch(`user/${user.username}/playlist/${playlist.name}`, {
                 method: 'GET'
             });
-            if (!response.ok) { return; } // handle errors later
+
+            if (!response.ok) {
+                const body = await response.json();
+                createError(body.message, 1000 * 10);
+                return;
+            }
+
             const body = await response.json();
             displayPlaylist = body;
             updatePlaylist();
@@ -84,9 +65,13 @@ function createSongRemoveButton(index) {
     button.on('click', async function () {
         icon.html('hourglass');
         const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${index}`, { method: 'DELETE' });
+
         if (!response.ok) {
-            return; // handle errors later
+            const body = await response.json();
+            createError(body.message, 1000 * 10);
+            return;
         }
+
         const body = await response.json();
         displayPlaylist = body;
         updatePlaylist();
@@ -135,9 +120,13 @@ function createSongAddButton(track) {
 
             const songIndex = displayPlaylist.songs.findLastIndex((song) => song.artist === track.artist && song.title === track.name);
             const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${songIndex}`, { method: 'DELETE', });
+
             if (!response.ok) {
-                return; // handle errors later
+                const body = await response.json();
+                createError(body.message, 1000 * 10);
+                return;
             }
+
             const body = await response.json();
             displayPlaylist = body;
 
@@ -158,9 +147,13 @@ function createSongAddButton(track) {
                         'Content-Type': 'application/json'
                     }
                 });
+
             if (!response.ok) {
-                return; // handle errors later
+                const body = await response.json();
+                createError(body.message, 1000 * 10);
+                return;
             }
+
             const body = await response.json();
             displayPlaylist = body;
 
@@ -243,8 +236,13 @@ $('input[type=color]').change(async function () {
             'Content-Type': 'application/json'
         }
     });
-    console.log(response);
-    if (!response.ok) { return; } // handle errors later
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return;
+    }
+
     const body = await response.json();
     user = body;
     await updateUserProfile();
@@ -259,7 +257,13 @@ async function onSearch() {
         return displayNoSearchResults();
     }
     const response = await fetch(`/song/${inputValue}`, { method: 'GET' });
-    if (!response.ok) { return; } // handle errors later
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return;
+    }
+
     const body = await response.json();
     songResults = body;
     updateSongResults();
@@ -312,7 +316,13 @@ $('#create-playlist-form').submit(async function (event) {
                 'Content-Type': 'application/json'
             }
         });
-    if (!response.ok) { return; } // handle errors later
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return;
+    }
+
     const body = await response.json();
     displayPlaylist = body;
     updateUserPlaylists();
