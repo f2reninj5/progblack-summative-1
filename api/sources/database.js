@@ -20,8 +20,9 @@ function resolve(model) {
 }
 
 (function initialiseData() {
-    if (!fs.existsSync(root)) {
-        fs.mkdirSync(root);
+    const resolvedRoot = path.resolve(__dirname, root);
+    if (!fs.existsSync(resolvedRoot)) {
+        fs.mkdirSync(resolvedRoot);
     }
     for (let key in Model) {
         const path = resolve(Model[key]);
