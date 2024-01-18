@@ -210,17 +210,19 @@ input[type=color] {
     text-overflow: ellipsis;
 }
 
-.song-listing button {
+.song-listing button,
+.error button {
     display: inline-block;
     background-color: rgba(0, 0, 0, 0);
     border: none;
     border-radius: none;
     padding: 0;
     height: fit-content;
-    margin: auto;
+    margin: auto 0 auto 0;
 }
 
-.song-listing button * {
+.song-listing button *,
+.error button * {
     display: block;
 }
 
@@ -334,4 +336,29 @@ main#search-page>.header {
 /* https://stackoverflow.com/a/45675761 */
 [hidden] {
     display: none
+}
+
+#error-stack {
+    bottom: 0;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    max-width: 90%;
+}
+
+.error {
+    background-color: var(--secondary);
+    margin: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: space-between;
+    transition: ease-in-out 0.5s;
+}
+
+.error .material-symbols-rounded {
+    margin: auto 0 auto 0;
 }

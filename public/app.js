@@ -3,6 +3,31 @@ let playlists = {};
 let displayPlaylist = {};
 let songResults = [];
 
+function createError(message, timeout = undefined) {
+    const errorStack = $('#error-stack');
+    const error = $(document.createElement('div')).addClass('error');
+    const icon = $(document.createElement('span')).addClass('material-symbols-rounded').html('error');
+    const messageP = $(document.createElement('p')).text(message);
+    const closeButton = $(document.createElement('button'));
+    const closeButtonIcon = $(document.createElement('span')).addClass('material-symbols-rounded').html('close');
+
+    closeButton.on('click', function () {
+        error.remove();
+    });
+
+    closeButton.html(closeButtonIcon);
+    error.append(icon, messageP, closeButton);
+    errorStack.append(error);
+
+    if (timeout) {
+        setTimeout(() => {
+            error.remove();
+        }, timeout);
+    }
+}
+
+createError('ERM buddy?!.. …Something went WRONG!!', 1000 * 5);
+
 async function updateUserProfile() {
     for (let element of $('.username')) {
         $(element).text(user.username);
@@ -195,7 +220,7 @@ function stallSearchResults() {
 function displayNoSearchResults() {
     const span = $(document.createElement('span'))
         .addClass('material-symbols-rounded')
-        .text('error');
+        .html('error');
     const p = $(document.createElement('p'))
         .text('No results found.');
     const div = $(document.createElement('div'))
