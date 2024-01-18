@@ -13,7 +13,15 @@ async function updateUserProfile() {
 }
 
 async function updateUserPlaylists() {
-    const response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' });
+    let response;
+
+    try {
+        response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' });
+    }
+    catch (error) {
+        createError('Lost connection to the server. Please try again later.', 1000 * 10);
+        return;
+    }
 
     if (!response.ok) {
         const body = await response.json();
@@ -37,9 +45,17 @@ async function updateUserPlaylists() {
         const smallDate = $(document.createElement('small')).text(createdAt.toLocaleDateString());
         button.append(h4, smallCount, smallDate);
         button.on('click', async function () {
-            const response = await fetch(`user/${user.username}/playlist/${playlist.name}`, {
-                method: 'GET'
-            });
+            let response;
+
+            try {
+                response = await fetch(`user/${user.username}/playlist/${playlist.name}`, {
+                    method: 'GET'
+                });
+            }
+            catch (error) {
+                createError('Lost connection to the server. Please try again later.', 1000 * 10);
+                return;
+            }
 
             if (!response.ok) {
                 const body = await response.json();
@@ -64,7 +80,15 @@ function createSongRemoveButton(index) {
 
     button.on('click', async function () {
         icon.html('hourglass');
-        const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${index}`, { method: 'DELETE' });
+        let response;
+
+        try {
+            response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${index}`, { method: 'DELETE' });
+        }
+        catch (error) {
+            createError('Lost connection to the server. Please try again later.', 1000 * 10);
+            return;
+        }
 
         if (!response.ok) {
             const body = await response.json();
@@ -119,7 +143,15 @@ function createSongAddButton(track) {
             span.html('hourglass');
 
             const songIndex = displayPlaylist.songs.findLastIndex((song) => song.artist === track.artist && song.title === track.name);
-            const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${songIndex}`, { method: 'DELETE', });
+            let response;
+
+            try {
+                response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${songIndex}`, { method: 'DELETE', });
+            }
+            catch (error) {
+                createError('Lost connection to the server. Please try again later.', 1000 * 10);
+                return;
+            }
 
             if (!response.ok) {
                 const body = await response.json();
@@ -139,14 +171,22 @@ function createSongAddButton(track) {
                 artist: track.artist,
                 title: track.name
             };
-            const response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify(song),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
+            let response;
+
+            try {
+                response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song`,
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(song),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+            }
+            catch (error) {
+                createError('Lost connection to the server. Please try again later.', 1000 * 10);
+                return;
+            }
 
             if (!response.ok) {
                 const body = await response.json();
@@ -229,13 +269,21 @@ function displayNoSearchResults() {
 }
 
 $('input[type=color]').change(async function () {
-    const response = await fetch(`/user/${user.username}`, {
-        method: 'PUT',
-        body: JSON.stringify({ profileColour: $(this).val() }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+    let response;
+
+    try {
+        response = await fetch(`/user/${user.username}`, {
+            method: 'PUT',
+            body: JSON.stringify({ profileColour: $(this).val() }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+    catch (error) {
+        createError('Lost connection to the server. Please try again later.', 1000 * 10);
+        return;
+    }
 
     if (!response.ok) {
         const body = await response.json();
@@ -256,7 +304,15 @@ async function onSearch() {
     if (!inputValue) {
         return displayNoSearchResults();
     }
-    const response = await fetch(`/song/${inputValue}`, { method: 'GET' });
+    let response;
+
+    try {
+        response = await fetch(`/song/${inputValue}`, { method: 'GET' });
+    }
+    catch (error) {
+        createError('Lost connection to the server. Please try again later.', 1000 * 10);
+        return;
+    }
 
     if (!response.ok) {
         const body = await response.json();
@@ -306,16 +362,24 @@ $('#create-playlist-form').submit(async function (event) {
     event.preventDefault();
     const form = $(this)[0];
     const name = $(`#${form.id} > [name="playlist-name"]`).val();
-    const response = await fetch(`/user/${user.username}/playlist`,
-        {
-            method: 'POST',
-            body: JSON.stringify({
-                name
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+    let response;
+
+    try {
+        response = await fetch(`/user/${user.username}/playlist`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    name
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+    }
+    catch (error) {
+        createError('Lost connection to the server. Please try again later.', 1000 * 10);
+        return;
+    }
 
     if (!response.ok) {
         const body = await response.json();
