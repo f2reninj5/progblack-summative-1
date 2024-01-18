@@ -11,14 +11,14 @@ function createError(message, timeout = undefined) {
     const closeButton = $(document.createElement('button'));
     const closeButtonIcon = $(document.createElement('span')).addClass('material-symbols-rounded').html('close');
 
+    error.on('animationend', function (event) {
+        if (event.originalEvent.animationName === 'fade-slide-out') {
+            error.remove();
+        }
+    });
+
     closeButton.on('click', function () {
-        error.animate({ opacity: 0 },
-            {
-                duration: 1000,
-                complete: () => {
-                    error.remove();
-                }
-            });
+        error.css('animation', 'fade-slide-out 1s forwards');
     });
 
     closeButton.html(closeButtonIcon);
@@ -27,13 +27,7 @@ function createError(message, timeout = undefined) {
 
     if (timeout) {
         setTimeout(async () => {
-            error.animate({ opacity: 0 },
-                {
-                    duration: 1000,
-                    complete: () => {
-                        error.remove();
-                    }
-                });
+            error.css('animation', 'fade-slide-out 1s forwards');
         }, timeout);
     }
 }
