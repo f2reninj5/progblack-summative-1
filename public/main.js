@@ -10,6 +10,10 @@ function hexToRGB(hex) {
 const PageManager = {
     pages: {},
     shown: null,
+    events: {
+        'switchto': 'switchTo',
+        'switchfrom': 'switchFrom'
+    },
     registerPages: function () {
         for (let main of $('main')) { // iterate through all 'main' elements
             let name = main.id.split('-page');
@@ -18,12 +22,20 @@ const PageManager = {
             }
         }
     },
-    switchToPage: function (pageId) {
+    switchToPage: async function (pageName) {
         if (this.shown) {
             this.shown.hidden = true;
+            await this.shown?.switchFrom();
         }
-        this.shown = this.pages[pageId];
+        this.shown = this.pages[pageName];
+        await this.shown?.switchTo();
         this.shown.hidden = false;
+    },
+    on: function (pageName, event, callback) {
+        if (!Object.keys(this.events).includes(event)) {
+            throw new Error('Invalid event provided');
+        }
+        pages[pageName][this.events[event]] = callback;
     }
 };
 
