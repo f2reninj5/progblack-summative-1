@@ -356,9 +356,20 @@ main#search-page>.header {
     flex-direction: row;
     gap: 0.5rem;
     justify-content: space-between;
-    transition: ease-in-out 0.5s;
+    animation-name: slide-in;
+    animation-duration: 1s;
 }
 
 .error .material-symbols-rounded {
     margin: auto 0 auto 0;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: none;
+    }
 }
