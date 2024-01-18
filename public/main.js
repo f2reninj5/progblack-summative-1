@@ -30,6 +30,28 @@ const PageManager = {
 PageManager.registerPages();
 PageManager.switchToPage('login');
 
+async function fetchAndParse(...fetchParameters) {
+    let response;
+
+    try {
+        response = await fetch(...fetchParameters);
+    }
+    catch (error) {
+        createError('Lost connection to the server. Please try again later.', 1000 * 10);
+        return null;
+    }
+
+    const body = await response.json();
+
+    if (!response.ok) {
+        const body = await response.json();
+        createError(body.message, 1000 * 10);
+        return null;
+    }
+
+    return body;
+}
+
 function createError(message, timeout = undefined) {
     const errorStack = $('#error-stack');
     const error = $(document.createElement('div')).addClass('error');

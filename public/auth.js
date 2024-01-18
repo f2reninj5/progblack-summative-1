@@ -11,23 +11,8 @@ async function logIn(username) {
     if (!Cookies.get(username)) {
         Cookies.set('username', username, { path: '/', expires: 7 });
     }
-    let response;
-
-    try {
-        response = await fetch(`/user/${username}`, { method: 'GET' });
-    }
-    catch (error) {
-        createError('Lost connection to the server. Please try again later.', 1000 * 10);
-        return;
-    }
-
-    if (!response.ok) {
-        const body = await response.json();
-        createError(body.message, 1000 * 10);
-        return;
-    }
-
-    const body = await response.json();
+    const body = await fetchAndParse(`/user/${username}`, { method: 'GET' });
+    if (!body) { return; }
     user = body;
     await updateUserProfile();
     PageManager.switchToPage('profile');
@@ -35,32 +20,17 @@ async function logIn(username) {
 }
 
 async function register(username) {
-    let response;
-
-    try {
-        response = await fetch('/user', {
-            method: 'POST',
-            body: JSON.stringify({
-                username,
-                profileColour: '#ffffff'
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
-    catch (error) {
-        createError('Lost connection to the server. Please try again later.', 1000 * 10);
-        return;
-    }
-
-    if (!response.ok) {
-        const body = await response.json();
-        createError(body.message, 1000 * 10);
-        return;
-    }
-
-    const body = await response.json();
+    const body = await fetchAndParse('/user', {
+        method: 'POST',
+        body: JSON.stringify({
+            username,
+            profileColour: '#ffffff'
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!body) { return; }
     user = body;
     await updateUserProfile();
     PageManager.switchToPage('profile');

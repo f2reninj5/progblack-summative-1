@@ -13,23 +13,8 @@ async function updateUserProfile() {
 }
 
 async function updateUserPlaylists() {
-    let response;
-
-    try {
-        response = await fetch(`/user/${user.username}/playlist`, { method: 'GET' });
-    }
-    catch (error) {
-        createError('Lost connection to the server. Please try again later.', 1000 * 10);
-        return;
-    }
-
-    if (!response.ok) {
-        const body = await response.json();
-        createError(body.message, 1000 * 10);
-        return;
-    }
-
-    const body = await response.json();
+    const body = await fetchAndParse(`/user/${user.username}/playlist`, { method: 'GET' });
+    if (!body) { return; }
     const playlistContainer = $('#playlist-container');
     const buttons = $('#playlist-container>.playlist');
 
@@ -45,25 +30,8 @@ async function updateUserPlaylists() {
         const smallDate = $(document.createElement('small')).text(createdAt.toLocaleDateString());
         button.append(h4, smallCount, smallDate);
         button.on('click', async function () {
-            let response;
-
-            try {
-                response = await fetch(`user/${user.username}/playlist/${playlist.name}`, {
-                    method: 'GET'
-                });
-            }
-            catch (error) {
-                createError('Lost connection to the server. Please try again later.', 1000 * 10);
-                return;
-            }
-
-            if (!response.ok) {
-                const body = await response.json();
-                createError(body.message, 1000 * 10);
-                return;
-            }
-
-            const body = await response.json();
+            const body = await fetchAndParse(`user/${user.username}/playlist/${playlist.name}`, { method: 'GET' });
+            if (!body) { return; }
             displayPlaylist = body;
             updatePlaylist();
             PageManager.switchToPage('playlist');
@@ -80,23 +48,8 @@ function createSongRemoveButton(index) {
 
     button.on('click', async function () {
         icon.html('hourglass');
-        let response;
-
-        try {
-            response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${index}`, { method: 'DELETE' });
-        }
-        catch (error) {
-            createError('Lost connection to the server. Please try again later.', 1000 * 10);
-            return;
-        }
-
-        if (!response.ok) {
-            const body = await response.json();
-            createError(body.message, 1000 * 10);
-            return;
-        }
-
-        const body = await response.json();
+        const body = await fetchAndParse(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${index}`, { method: 'DELETE' });
+        if (!body) { return; }
         displayPlaylist = body;
         updatePlaylist();
     });
@@ -143,23 +96,8 @@ function createSongAddButton(track) {
             span.html('hourglass');
 
             const songIndex = displayPlaylist.songs.findLastIndex((song) => song.artist === track.artist && song.title === track.name);
-            let response;
-
-            try {
-                response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${songIndex}`, { method: 'DELETE', });
-            }
-            catch (error) {
-                createError('Lost connection to the server. Please try again later.', 1000 * 10);
-                return;
-            }
-
-            if (!response.ok) {
-                const body = await response.json();
-                createError(body.message, 1000 * 10);
-                return;
-            }
-
-            const body = await response.json();
+            const body = await fetchAndParse(`/user/${user.username}/playlist/${displayPlaylist.name}/song/${songIndex}`, { method: 'DELETE', });
+            if (!body) { return; }
             displayPlaylist = body;
 
             span.html('add_circle');
@@ -171,30 +109,14 @@ function createSongAddButton(track) {
                 artist: track.artist,
                 title: track.name
             };
-            let response;
-
-            try {
-                response = await fetch(`/user/${user.username}/playlist/${displayPlaylist.name}/song`,
-                    {
-                        method: 'POST',
-                        body: JSON.stringify(song),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-            }
-            catch (error) {
-                createError('Lost connection to the server. Please try again later.', 1000 * 10);
-                return;
-            }
-
-            if (!response.ok) {
-                const body = await response.json();
-                createError(body.message, 1000 * 10);
-                return;
-            }
-
-            const body = await response.json();
+            const body = await fetchAndParse(`/user/${user.username}/playlist/${displayPlaylist.name}/song`, {
+                method: 'POST',
+                body: JSON.stringify(song),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!body) { return; }
             displayPlaylist = body;
 
             span.html('check_circle');
@@ -269,58 +191,25 @@ function displayNoSearchResults() {
 }
 
 $('input[type=color]').change(async function () {
-    let response;
-
-    try {
-        response = await fetch(`/user/${user.username}`, {
-            method: 'PUT',
-            body: JSON.stringify({ profileColour: $(this).val() }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-    }
-    catch (error) {
-        createError('Lost connection to the server. Please try again later.', 1000 * 10);
-        return;
-    }
-
-    if (!response.ok) {
-        const body = await response.json();
-        createError(body.message, 1000 * 10);
-        return;
-    }
-
-    const body = await response.json();
+    const body = await fetchAndParse(`/user/${user.username}`, {
+        method: 'PUT',
+        body: JSON.stringify({ profileColour: $(this).val() }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!body) { return; }
     user = body;
     await updateUserProfile();
 });
-
-$('#search-input').val('hello world');
-onSearch();
 
 async function onSearch() {
     const inputValue = $('#search-input').val();
     if (!inputValue) {
         return displayNoSearchResults();
     }
-    let response;
-
-    try {
-        response = await fetch(`/song/${inputValue}`, { method: 'GET' });
-    }
-    catch (error) {
-        createError('Lost connection to the server. Please try again later.', 1000 * 10);
-        return;
-    }
-
-    if (!response.ok) {
-        const body = await response.json();
-        createError(body.message, 1000 * 10);
-        return;
-    }
-
-    const body = await response.json();
+    const body = await fetchAndParse(`/song/${inputValue}`, { method: 'GET' });
+    if (!body) { return; }
     songResults = body;
     updateSongResults();
 }
@@ -362,32 +251,18 @@ $('#create-playlist-form').submit(async function (event) {
     event.preventDefault();
     const form = $(this)[0];
     const name = $(`#${form.id} > [name="playlist-name"]`).val();
-    let response;
 
-    try {
-        response = await fetch(`/user/${user.username}/playlist`,
-            {
-                method: 'POST',
-                body: JSON.stringify({
-                    name
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-    }
-    catch (error) {
-        createError('Lost connection to the server. Please try again later.', 1000 * 10);
-        return;
-    }
+    const body = await fetchAndParse(`/user/${user.username}/playlist`, {
+        method: 'POST',
+        body: JSON.stringify({
+            name
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!body) { return; }
 
-    if (!response.ok) {
-        const body = await response.json();
-        createError(body.message, 1000 * 10);
-        return;
-    }
-
-    const body = await response.json();
     displayPlaylist = body;
     updateUserPlaylists();
     updatePlaylist();

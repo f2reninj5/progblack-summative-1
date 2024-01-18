@@ -19,6 +19,11 @@ function resolve(model) {
     return path.resolve(__dirname, root, model);
 }
 
+/**
+ * - Create data folder if not found
+ * - Create data file for each entity not found
+ * - Create new files if not valid JSON
+ */
 (function initialiseData() {
     const resolvedRoot = path.resolve(__dirname, root);
     if (!fs.existsSync(resolvedRoot)) {
