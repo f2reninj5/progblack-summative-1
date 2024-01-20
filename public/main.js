@@ -7,12 +7,13 @@ function hexToRGB(hex) {
     return result.join(', ');
 }
 
-const PageManager = {
+const Pages = {
     pages: {},
     shown: null,
     events: {
         'switchto': 'switchTo',
-        'switchfrom': 'switchFrom'
+        'switchfrom': 'switchFrom',
+        'switchtoend': 'switchToEnd'
     },
     registerPages: function () {
         for (let main of $('main')) { // iterate through all 'main' elements
@@ -25,22 +26,29 @@ const PageManager = {
     switchToPage: async function (pageName) {
         if (this.shown) {
             this.shown.hidden = true;
-            await this.shown?.switchFrom();
+            await this.shown.switchFrom?.();
         }
         this.shown = this.pages[pageName];
-        await this.shown?.switchTo();
+        await this.shown.switchTo?.();
         this.shown.hidden = false;
+        await this.shown.switchToEnd?.();
     },
-    on: function (pageName, event, callback) {
+    on: function (event, pageName, callback) {
         if (!Object.keys(this.events).includes(event)) {
-            throw new Error('Invalid event provided');
+            throw new Error('Invalid event');
         }
-        pages[pageName][this.events[event]] = callback;
+        if (!Object.keys(this.pages).includes(pageName)) {
+            throw new Error('Invalid page');
+        }
+        this.pages[pageName][this.events[event]] = callback;
     }
 };
 
-PageManager.registerPages();
-PageManager.switchToPage('login');
+Pages.registerPages();
+Pages.switchToPage('login');
+
+$('button.profile-return').on('click', function () { Pages.switchToPage('profile'); });
+$('button.playlist-return').on('click', function () { Pages.switchToPage('playlist'); });
 
 async function fetchAndParse(...fetchParameters) {
     let response;
