@@ -62,9 +62,7 @@ async function fetchAndParse(...fetchParameters) {
     }
 
     const body = await response.json();
-
     if (!response.ok) {
-        const body = await response.json();
         createError(body.message, 1000 * 10);
         return null;
     }

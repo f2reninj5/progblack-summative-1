@@ -319,8 +319,13 @@ h2.playlist-name {
 }
 
 #playlist-info {
-    padding: 0 4rem 0 4rem;
+    padding: 0 1rem 0 1rem;
     box-sizing: border-box;
+}
+
+#playlist-options {
+    display: flex;
+    gap: 1rem;
 }
 
 main#search-page>.header {
