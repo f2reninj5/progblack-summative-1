@@ -1,7 +1,7 @@
 
 let searchResults = [];
 
-Pages.on('switchfrom', 'search', function () { resetSearchResultButtons(); });
+Pages.on('switchto', 'search', function () { clearSearchResults(); });
 
 Pages.on('switchtoend', 'search', function () { $('#search-input').select(); });
 
@@ -110,13 +110,13 @@ function updateSearchResults() {
 }
 
 /**
- * 
+ * Display search prompt
  */
-function resetSearchResultButtons() {
-    const spans = $('.search-listing>button>span.material-symbols-rounded');
-    for (let span of spans) {
-        $(span).html('add_circle');
-    }
+function clearSearchResults() {
+    const icon = $(document.createElement('span')).addClass('material-symbols-rounded').html('search');
+    const message = $(document.createElement('p')).text('Search for a song!');
+    const dialogue = $(document.createElement('div')).addClass('search-dialogue').append(icon, message);
+    $('#search-result-container').html(dialogue);
 }
 
 /**
