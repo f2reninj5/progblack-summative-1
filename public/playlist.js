@@ -57,10 +57,14 @@ function updatePlaylistPage() {
         const songData = currentPlaylist.songs[i];
         const songListing = $(document.createElement('div')).addClass(['song-listing', 'playlist-listing']);
         const index = $(document.createElement('p')).text(i + 1).addClass('index');
-        const title = $(document.createElement('p')).text(songData.title);
-        const artist = $(document.createElement('p')).text(songData.artist);
+        const title = $(document.createElement('p')).addClass('clickable').text(songData.title);
+        const artist = $(document.createElement('p')).addClass('clickable').text(songData.artist);
         const removeButton = createSongRemoveButton(i);
         songListing.append(index, title, artist, removeButton);
+
+        artist.on('click', function () { displayArtistInfo(songData.artist); });
+        title.on('click', function () { displaySongInfo(songData.artist, songData.title); });
+
         songContainer.append(songListing, document.createElement('hr'));
     }
 }

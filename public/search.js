@@ -93,13 +93,13 @@ function updateSearchResults() {
     // generate list of songs within the container
     for (const track of searchResults) {
         const songListing = $(document.createElement('div')).addClass(['song-listing', 'search-listing']);
-        const title = $(document.createElement('p'));
-        const artist = $(document.createElement('p'));
+        const title = $(document.createElement('p')).addClass('clickable').text(track.name);
+        const artist = $(document.createElement('p')).addClass('clickable').text(track.artist);
         const addButton = createSongAddButton(track);
-
-        title.text(track.name);
-        artist.text(track.artist);
         songListing.append(title, artist, addButton);
+
+        artist.on('click', function () { displayArtistInfo(track.artist); });
+        title.on('click', function () { displaySongInfo(track.artist, track.name); });
 
         $('#search-result-container').append(songListing, document.createElement('hr'));
     }

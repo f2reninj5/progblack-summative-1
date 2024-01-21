@@ -12,7 +12,7 @@ artist.use('/:name', async (request, response, next) => {
     }
     catch (error) {
         console.log(error);
-        return response.status(502).send({ message: 'Error while finding artist on last.fm.' });
+        return response.status(502).send({ message: 'Error while finding artist on Last.fm.' });
     }
 
     if (!artist) {

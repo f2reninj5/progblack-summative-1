@@ -107,6 +107,14 @@ p {
     margin-block-end: 0.5em;
 }
 
+a {
+    color: var(--primary);
+}
+
+a:visited {
+    color: var(--primary);
+}
+
 button {
     position: relative;
     transition: 0.2s;
@@ -280,7 +288,9 @@ input[type=color] {
 }
 
 h2.username,
-h2.playlist-name {
+h2.playlist-name,
+h3.artist-name,
+h3.song-title {
     -webkit-text-stroke: var(--text) 0.1px;
     color: rgb(var(--profile));
 }
@@ -292,7 +302,7 @@ h2.playlist-name {
     gap: 2rem;
 }
 
-#create-playlist-form {
+.dialogue {
     position: fixed;
     background-color: var(--secondary);
     width: 80%;
@@ -308,13 +318,13 @@ h2.playlist-name {
     gap: 1rem;
 }
 
-#create-playlist-form>* {
+.dialogue>* {
     margin: 0 auto 0 auto;
     width: 80%;
     text-align: center;
 }
 
-#create-playlist-form>button {
+.dialogue>button {
     width: auto;
 }
 
@@ -391,4 +401,27 @@ main#search-page>.header {
         opacity: 0;
         transform: translateX(-100%);
     }
+}
+
+.clickable:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#similar-artists,
+#song-tags {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+#similar-artists>a,
+#song-tags>a {
+    margin: 0 auto 0 auto;
+}
+
+#song-image {
+    width: 20vmin;
+    height: 20vmin;
+    border-radius: 0.2rem;
 }

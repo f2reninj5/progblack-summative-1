@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello</title>
+    <title>Playlist Thing</title>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/styles.css">
     <!-- https://fonts.google.com/?icon.platform=web&icon.set=Material+Symbols&icon.style=Rounded -->
@@ -53,7 +53,7 @@
         </div>
 
         <div id="create-playlist" class="dialogue-background" hidden>
-            <form id="create-playlist-form">
+            <form id="create-playlist-form" class="dialogue">
                 <div class="header">
                     <h3>Create Playlist</h3>
                     <button id="close-create-playlist-form-button"><span class="material-symbols-rounded">close</span></button>
@@ -95,17 +95,49 @@
         </div>
         <div id="search-result-container" class="song-container"></div>
     </main>
+    
+    <div id="loading-dialogue" class="dialogue-background" hidden>
+        <div class="dialogue">
+            <span class="material-symbols-rounded">hourglass</span>
+        </div>
+    </div>
+
+    <div id="artist-info" class="dialogue-background" hidden>
+        <div class="dialogue">
+            <div class="header">
+                <h3 class="artist-name">Artist</h3>
+                <button id="close-artist-info"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <a id="artist-link" href=""></a>
+            <div id="artist-stats"></div>
+            <h4>Similar Artists</h4>
+            <div id="similar-artists"></div>
+        </div>
+    </div>
+    </div>
+
+    <div id="song-info" class="dialogue-background" hidden>
+        <div class="dialogue">
+            <div class="header">
+                <h3 class="song-title">Song</h3>
+                <button id="close-song-info"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <h4 class="song-artist">Artist</h4>
+            <img id="song-image" src="" alt="An image representing the song.">
+            <a id="song-link" href=""></a>
+            <div id="song-stats"></div>
+            <h4>Tags</h4>
+            <div id="song-tags"></div>
+        </div>
+    </div>
 
     <div id="error-stack"></div>
-    
-    <footer>
-
-    </footer>
 
     <script src="/main.js" defer></script>
     <script src="/auth.js" defer></script>
     <script src="/profile.js" defer></script>
     <script src="/playlist.js" defer></script>
     <script src="/search.js" defer></script>
+    <script src="/info.js" defer></script>
 </body>
 </html>

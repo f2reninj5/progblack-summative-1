@@ -12,7 +12,7 @@ song.get('/:title', async (request, response) => {
     }
     catch (error) {
         console.log(error);
-        return response.status(502).send({ message: 'Error while finding song on last.fm.' });
+        return response.status(502).send({ message: 'Error while finding song on Last.fm.' });
     }
 
     if (!song) {

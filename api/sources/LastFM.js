@@ -46,7 +46,10 @@ const Artist = {
             name: body.name,
             url: body.url,
             image: body.image.find((image) => image.size === 'large')['#text'],
-            stats: body.stats,
+            stats: {
+                listeners: parseInt(body.stats.listeners),
+                playcount: parseInt(body.stats.playcount)
+            },
             similar: body.similar.artist.map((artist) => ({
                 name: artist.name,
                 url: artist.url,
