@@ -5,11 +5,14 @@ Pages.on('switchto', 'playlist', function () { updatePlaylistPage(); });
 
 $('button#add-songs').on('click', function () { Pages.switchToPage('search'); });
 
-$('button#delete-playlist').on('click', async function () {
-    const body = await fetchAndParse(`/user/${user.username}/playlist/${currentPlaylist.name}`, { method: 'DELETE' });
-    if (!body) { return; }
+$('button#delete-playlist').on('click', function () {
+    createConfirmDialogue('Are you sure you want to delete this playlist?', async function () {
+        // DELETE user playlist
+        const body = await fetchAndParse(`/user/${user.username}/playlist/${currentPlaylist.name}`, { method: 'DELETE' });
+        if (!body) { return; }
 
-    Pages.switchToPage('profile');
+        Pages.switchToPage('profile');
+    });
 });
 
 /**

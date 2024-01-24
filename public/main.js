@@ -1,4 +1,8 @@
 
+/**
+ * @param {string} hex hex string in form #abcdef
+ * @returns rgb string in form 255, 255, 255
+ */
 function hexToRGB(hex) {
     let result = [];
     for (let i = 1; i < 6; i += 2) {
@@ -16,9 +20,13 @@ const Pages = {
         'switchtoend': 'switchToEnd'
     },
     registerPages: function () {
-        for (let main of $('main')) { // iterate through all 'main' elements
+        // for each main element
+        for (let main of $('main')) {
+            // the name of the page is the part before -page in the id
             let name = main.id.split('-page');
+            // if the id is in this form
             if (name.length == 2) {
+                // then save element in pages
                 this.pages[name[0]] = main;
             }
         }
@@ -50,6 +58,10 @@ Pages.switchToPage('login');
 $('button.profile-return').on('click', function () { Pages.switchToPage('profile'); });
 $('button.playlist-return').on('click', function () { Pages.switchToPage('playlist'); });
 
+/**
+ * @param  {...any} fetchParameters parameters to pass directly into the fetch function
+ * @returns the response body or null if there was an error
+ */
 async function fetchAndParse(...fetchParameters) {
     let response;
 
@@ -70,6 +82,10 @@ async function fetchAndParse(...fetchParameters) {
     return body;
 }
 
+/**
+ * @param {string} message the message to display in the error
+ * @param {number} timeout how long before the error should automatically disappear
+ */
 function createError(message, timeout = undefined) {
     const errorStack = $('#error-stack');
     const error = $(document.createElement('div')).addClass('error');
@@ -97,4 +113,32 @@ function createError(message, timeout = undefined) {
             error.css('animation', 'fade-slide-out 1s forwards');
         }, timeout);
     }
+}
+
+/**
+ * @param {string} message the message to display in the dialogue box
+ * @param {Function} onConfirm the function to call when the confirm button is pressed
+ */
+function createConfirmDialogue(message, onConfirm) {
+    const background = $(document.createElement('div')).addClass('dialogue-background');
+    const dialgoue = $(document.createElement('div')).addClass('dialogue');
+    const header = $(document.createElement('div')).addClass('header');
+    const messageH = $(document.createElement('h3')).text(message);
+    const closeButton = $(document.createElement('button'));
+    const closeIcon = $(document.createElement('span')).addClass('material-symbols-rounded').html('close');
+    const confirmButton = $(document.createElement('button')).text('Confirm');
+    closeButton.html(closeIcon);
+    header.append(messageH, closeButton);
+    dialgoue.append(header, confirmButton);
+    background.html(dialgoue);
+
+    confirmButton.on('click', function () {
+        onConfirm();
+        background.remove();
+    });
+    closeButton.on('click', function () {
+        background.remove();
+    });
+
+    $('body').append(background);
 }

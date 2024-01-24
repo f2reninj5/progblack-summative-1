@@ -1,5 +1,11 @@
 # progblack-summative-1
 
+## Licences
+
+* [Didact Gothic](https://fonts.google.com/specimen/Didact+Gothic) licenced under the [Open Font Licence](https://openfontlicense.org/)
+* [Google Material Icons](https://developers.google.com/fonts/docs/material_icons) licenced under the [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
+* [Last.fm API Terms of Service](https://www.last.fm/api/tos)
+
 ***
 
 # Playlist Thing API
